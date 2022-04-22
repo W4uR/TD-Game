@@ -40,6 +40,8 @@ public class HexCoords
         this.r = r;
     }
 
+
+
     public HexCoords(Vector3Int cubeCoords)
     {
         q = cubeCoords.x;
@@ -60,6 +62,11 @@ public class HexCoords
         return new Vector3(x , 0, y);
     }
 
+
+    public static HexCoords CartesianToHex(Vector3 pos)
+    {
+        return CartesianToHex(pos.x, pos.z);
+    }
 
     public static HexCoords CartesianToHex(float x, float y)
     {
@@ -122,7 +129,7 @@ public class HexCoords
         return new HexCoords(left.q + right.q, left.r + right.r);
     }
 
-    public override string ToString() => $"{q}:{r}";
+    public override string ToString() => $"{q} : {r}";
     
     public byte[] ToBytes()
     {

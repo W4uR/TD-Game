@@ -12,6 +12,10 @@ public class Brush
         preset = _preset;
         type = _type;
     }
+    public Brush()
+    {
+        preset = new BrushPreset();
+    }
 
     public int Type { get => type; set => type = value; }
     public int Cells { get => preset.points.Count; }
@@ -27,5 +31,11 @@ public class BrushPreset
         {
             points.Add(new HexCoords(bytes.SubArray(offset, 8)));
         }
+    }
+
+    public BrushPreset()
+    {
+        points = new List<HexCoords>();
+        points.Add(new HexCoords(0, 0));
     }
 }

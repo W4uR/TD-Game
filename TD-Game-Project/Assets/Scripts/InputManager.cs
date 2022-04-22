@@ -39,11 +39,11 @@ public class InputManager : MonoBehaviour
             me.SaveBrush();
         }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             me.ScrollBrush(true);
         }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             me.ScrollBrush(false);
         }

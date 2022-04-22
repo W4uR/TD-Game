@@ -12,15 +12,53 @@ public class MapEditor : LevelLoader
 
     private Camera cam;
 
+    public GameObject brushCellPrefab;
+    private List<GameObject> brushCells;
+
     private List<BrushPreset> brushPresets;
     private Brush brush;
     private int currentBrush = 0;
     protected override void Awake()
     {
         base.Awake();
+
+        brushCells = new List<GameObject>();
+
         cam = Camera.main;
         LoadBrushes();
         brush = new Brush(brushPresets[currentBrush],0);
+    }
+
+    private Vector3 prevpos;
+    private void Update()
+    {
+        if (prevpos!=Input.mousePosition)
+        {
+            prevpos = Input.mousePosition;
+            ShowBrush();
+        }
+    }
+    
+
+    public void ShowBrush()
+    {
+        foreach (var item in brushCells)
+        {
+            Destroy(item.gameObject);
+        }
+        brushCells.Clear();
+
+
+        HexCoords center = HexCoords.CartesianToHex( cam.ScreenToWorldPoint(Input.mousePosition));
+
+        for (int i = 0; i < brush.Cells; i++)
+        {
+            HexCoords c = brush.preset.points[i] + center;
+
+            GameObject current = Instantiate(brushCellPrefab, HexCoords.HexToCartesian(c) + Vector3.up, Quaternion.identity);
+
+            brushCells.Add(current);
+        }
     }
 
     public void ScrollBrush(bool toRight)
@@ -38,28 +76,11 @@ public class MapEditor : LevelLoader
             }
         }
         brush = new Brush(brushPresets[currentBrush], 0);
+        ShowBrush();
         Debug.Log(currentBrush);
     }
 
 
-    /*
-    private void Start()
-    {
-        
-        for (int i = -10; i < 10; i++)
-        {
-            for (int j = -6; j < 6; j++)
-            {
-                GameObject go = Instantiate(tilePrefab, Vector3.zero, Quaternion.identity);
-                Tile current = go.GetComponent<Tile>();
-                current.SetHex(i,j);
-
-                tiles.Add(current);
-            }
-        }
-        
-    }
-    */
     
     public void OnLeftMouseBtn()
     {
@@ -76,43 +97,27 @@ public class MapEditor : LevelLoader
 
         Physics.Raycast(ray, out RaycastHit hitinfo);
 
-        RemoveTileAt(hitinfo.point);
+        RemoveTileAt(HexCoords.CartesianToHex(hitinfo.point.x,hitinfo.point.z));
     }
 
-    void RemoveTileAt(Vector3 pos)
+    void RemoveTileAt(HexCoords center)
     {
-        HexCoords coords = HexCoords.CartesianToHex(pos.x, pos.z);
-        if (tiles.ContainsKey(coords))
+
+        for (int i = 0; i < brush.Cells; i++)
         {
-            Destroy(tiles[coords].gameObject);
-            tiles.Remove(coords);
+
+            HexCoords c = brush.preset.points[i] + center;
+            if (tiles.ContainsKey(c))
+            {
+                Destroy(tiles[c].gameObject);
+                tiles.Remove(c);
+            }
         }
+
     }
     void CreateTileAt(HexCoords center)
     {
 
-        if (brushPresets.Count == 0)
-        {
-            Tile current = Instantiate(tilePrefab, HexCoords.HexToCartesian(center), Quaternion.identity);
-
-            current.Setup(center, 0);
-
-            current.transform.SetParent(TilesParent, true);
-
-            if (tiles.ContainsKey(center))
-            {
-                if (tiles[center].Type == current.Type)
-                {
-                    Destroy(current.gameObject);
-                    return;
-                }
-                else
-                {
-                    tiles.Remove(center);
-                }
-            }
-            tiles.Add(center, current);
-        }
 
         for (int i = 0; i < brush.Cells; i++)
         {
@@ -181,23 +186,32 @@ public class MapEditor : LevelLoader
 
             offset += 8;
         }
-        int fCount = Directory.GetFiles($"{Application.dataPath}/editor/", "*", SearchOption.TopDirectoryOnly).Length;
+
+        if (Directory.Exists($"{Application.dataPath}/editor/") == false)
+        {
+            Directory.CreateDirectory($"{Application.dataPath}/editor/");
+        }
+
+        int fCount = Directory.GetFiles($"{Application.dataPath}/editor/", "brush_*.tdb", SearchOption.TopDirectoryOnly).Length;
         File.WriteAllBytes($"{Application.dataPath}/editor/brush_{fCount}.tdb", Extensions.Compress(bytes));
 
         Debug.Log("Saved Brush");
+        LoadBrushes();
     }
     
     public void LoadBrushes()
     {
         brushPresets = new List<BrushPreset>();
+        brushPresets.Add(new BrushPreset());
 
-        int brushCount = Directory.GetFiles($"{Application.dataPath}/editor/", "brush_*.tdb", SearchOption.TopDirectoryOnly).Length;
-        for (int i = 0; i < brushCount; i++)
+        string[] brushes = Directory.GetFiles($"{Application.dataPath}/editor/", "brush_*.tdb", SearchOption.AllDirectories);
+
+        foreach (var path in brushes)
         {
-            byte[] bytes = Extensions.Decompress(File.ReadAllBytes($"{Application.dataPath}/editor/brush_{2*i}.tdb"));
+            byte[] bytes = Extensions.Decompress(File.ReadAllBytes(path));
             brushPresets.Add(new BrushPreset(bytes));
         }
-
+        Debug.Log("Loaded Brushes");
     }
 
 }
