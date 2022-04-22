@@ -15,7 +15,14 @@ public class LevelLoader : MonoBehaviour
     protected virtual void Awake()
     {
         tiles = new Dictionary<HexCoords, Tile>();
-        Load();
+        if (GetType() == typeof(LevelLoader))
+        {
+            Load();
+            foreach (var tile in tiles.Values)
+            {
+                tile.gameObject.AddComponent<MeshCollider>();
+            }
+        }    // Not in editor
     }
 
     public virtual void Save()

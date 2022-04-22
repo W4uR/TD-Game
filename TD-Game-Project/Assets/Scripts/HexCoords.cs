@@ -12,6 +12,23 @@ public class HexCoords
     static readonly private float width = 2f * size;
     static readonly private float sqrt_3 = Mathf.Sqrt(3f);
     static readonly private float height = sqrt_3 * size;
+    static readonly private Vector3Int[] cube_direction_vectors =
+    {
+        new Vector3Int( 1, 0, -1 ), new Vector3Int(1, -1, 0), new Vector3Int(0, -1, 1),
+        new Vector3Int(-1, 0, 1), new Vector3Int(-1, 1, 0), new Vector3Int(0, 1, -1),
+    };
+
+    public static List<HexCoords> Neighbors(HexCoords hc)
+    {
+        List<HexCoords> neighbors = new List<HexCoords>();
+
+        foreach (Vector3Int direction in cube_direction_vectors)
+        {
+            neighbors.Add(new HexCoords(direction));
+        }
+
+        return neighbors;
+    }
 
     public int Q { get => q;}
     public int R { get => r;}
@@ -98,6 +115,11 @@ public class HexCoords
     public static bool operator !=(HexCoords left, HexCoords right)
     {
         return left.Q != right.Q || left.R != right.R;
+    }
+
+    public static HexCoords operator + (HexCoords left,HexCoords right)
+    {
+        return new HexCoords(left.q + right.q, left.r + right.r);
     }
 
     public override string ToString() => $"{q}:{r}";
