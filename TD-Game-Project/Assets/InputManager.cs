@@ -35,21 +35,6 @@ public class InputManager : MonoBehaviour
         }
 
 
-        if (Input.mouseScrollDelta.y > 0.1f)
-        {
-
-            if (cam.orthographicSize > 1.5f)
-            {
-                cam.orthographicSize -= 0.5f;
-            }
-        }
-        else if (Input.mouseScrollDelta.y < -0.1f)
-        {
-            if (cam.orthographicSize < 15.5f)
-            {
-                cam.orthographicSize += 0.5f;
-            }
-        }
 
     }
 }

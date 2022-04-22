@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using System.Text;
 using System;
+using System.IO.Compression;
 
 public class MapEditor : MonoBehaviour
 {
@@ -11,7 +12,6 @@ public class MapEditor : MonoBehaviour
     public Tile tilePrefab;
 
     private Camera cam;
-
 
     private Dictionary<HexCoords, Tile> tiles;
 
@@ -112,8 +112,8 @@ public class MapEditor : MonoBehaviour
 
             offset+=9; // 4 + 4 bytes are the coords and 1 byte is the type
         }
-        
-        File.WriteAllBytes(Application.dataPath + "/map01.td", bytes);
+
+        File.WriteAllBytes(Application.dataPath + "/map01.td", Extensions.Compress(bytes));
 
         Debug.Log("Saved");
     }
@@ -121,7 +121,9 @@ public class MapEditor : MonoBehaviour
     public void Load()
     {
         ClearMap();
-        byte[] bytes = File.ReadAllBytes(Application.dataPath + "/map01.td");
+
+        
+        byte[] bytes =  Extensions.Decompress(File.ReadAllBytes(Application.dataPath + "/map01.td"));
 
 
         for (int offset = 0; offset < bytes.Length; offset+=9)
