@@ -5,23 +5,19 @@ using TMPro;
 
 public class Tile : MonoBehaviour
 {
-    HexCoords coords;
+    byte type = 0;
+
     public TMP_Text text;
-    public void Setup(float x, float y)
+
+    public byte Type { get => type;}
+
+    public void Setup(HexCoords coords, byte type)
     {
-        coords = HexCoords.CartesianToHex(x, y);
-        
+        transform.position = HexCoords.HexToCartesian(coords);// + Vector3.up * transform.position.y;
+        text.text = coords.ToString();
+        name = $"Tile {coords}";
+        this.type = type;
 
-        
-
-
-    }
-
-    public void SetHex(int q, int r)
-    {
-        coords = new HexCoords(q, r);
-        transform.position = HexCoords.HexToCartesian(coords);
-        text.text = $"{coords.Q}:{coords.R}";
     }
 
 }
