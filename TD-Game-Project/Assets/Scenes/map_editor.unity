@@ -842,7 +842,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TilesParent: {fileID: 160062813}
-  tilePrefab: {fileID: 7909259452181087015, guid: 21fb16734790b5d4696f7807fd35a1f2, type: 3}
+  tilePrefab: {fileID: 7909259452181087015, guid: 97076083abb256d4a83edb88a2328a48, type: 3}
 --- !u!4 &983646879
 Transform:
   m_ObjectHideFlags: 0

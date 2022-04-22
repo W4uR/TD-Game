@@ -6,20 +6,17 @@ using System.Text;
 using System;
 using System.IO.Compression;
 
-public class MapEditor : MonoBehaviour
+public class MapEditor : LevelLoader
 {
-    public Transform TilesParent;
-    public Tile tilePrefab;
+    
 
     private Camera cam;
 
-    private Dictionary<HexCoords, Tile> tiles;
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         cam = Camera.main;
-        tiles = new Dictionary<HexCoords, Tile>();
-
     }
     /*
     private void Start()
@@ -39,7 +36,6 @@ public class MapEditor : MonoBehaviour
         
     }
     */
-
 
     public void OnLeftMouseBtn()
     {
@@ -95,7 +91,7 @@ public class MapEditor : MonoBehaviour
     }
 
 
-    public void Save()
+    public override void Save()
     {
 
         byte[] bytes = new byte[9*tiles.Count];
@@ -117,36 +113,5 @@ public class MapEditor : MonoBehaviour
 
         Debug.Log("Saved");
     }
-
-    public void Load()
-    {
-        ClearMap();
-
-        
-        byte[] bytes =  Extensions.Decompress(File.ReadAllBytes(Application.dataPath + "/map01.td"));
-
-
-        for (int offset = 0; offset < bytes.Length; offset+=9)
-        {
-            Tile current = Instantiate(tilePrefab, Vector3.zero, Quaternion.identity);
-
-            HexCoords coords = new HexCoords( bytes.SubArray(offset, 8));
-            byte type = bytes[offset+8];
-            current.Setup(coords, type);
-            current.transform.SetParent(TilesParent, true);
-            tiles.Add(coords, current);
-        }
-        
-        Debug.Log("Loaded");
-    }
-
-    private void ClearMap()
-    {
-        foreach (var tile in tiles)
-        {
-            Destroy(tile.Value.gameObject);
-        }
-        tiles.Clear();
-    }
-
+    
 }
