@@ -29,25 +29,13 @@ public class HexCoords
         r = cubeCoords.y;
     }
 
-    /*
+    
     public HexCoords(byte[] bytes)
     {
-        // Q
-        for (int i = 0; i < 4; i++)
-        {
-            q = q << (i * 8);
-
-            q +=bytes[i];
-        }
-        // R
-        for (int i = 4; i < 8; i++)
-        {
-            r = r << (i * 8);
-
-            r += bytes[i];
-        }
+        q = BitConverter.ToInt32(bytes);
+        r = BitConverter.ToInt32(bytes,4);
     }
-    */
+    
     public static Vector3 HexToCartesian(HexCoords coords)
     {
         float x = (3f *.5f * coords.Q) * size;
@@ -113,26 +101,10 @@ public class HexCoords
     }
 
     public override string ToString() => $"{q}:{r}";
-    /*
+    
     public byte[] ToBytes()
     {
-        byte[] bytes = new byte[8];
-        int _q;
-        int _r;
-        // Q
-        for (int i = 0; i < 4; i++)
-        {
-            _q = q >> (i * 8);
-            bytes[i] = (byte)_q;
-        }
-        // R
-        for (int i = 4; i < 8; i++)
-        {
-            _r = r >> (i * 8);
-            bytes[i] = (byte)_r;
-        }
-
-        return bytes;
+        return Extensions.Concat(BitConverter.GetBytes(q), BitConverter.GetBytes(r));
     }
-    */
+    
 }

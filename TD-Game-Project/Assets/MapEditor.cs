@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Text;
+using System;
 
 public class MapEditor : MonoBehaviour
 {
@@ -107,14 +108,13 @@ public class MapEditor : MonoBehaviour
     public void Save()
     {
 
-        /*
         byte[] bytes = new byte[9*tiles.Count];
 
         int offset = 0;
         foreach (var tile in tiles)
         {
             byte[] qrCoords = tile.Key.ToBytes();
-            for (int i = 0; i < qrCoords.Length; i++)
+            for (int i = 0; i < 8; i++)
             {
                 bytes[offset + i] = qrCoords[i];
             }
@@ -123,23 +123,18 @@ public class MapEditor : MonoBehaviour
             offset+=9;
         }
         
-        File.WriteAllBytes(Application.dataPath + "/map01.owncucc", bytes);
-        */
+        File.WriteAllBytes(Application.dataPath + "/map01.td", bytes);
 
-        StringBuilder sb = new StringBuilder();
-        foreach (var tile in tiles.Values)
-        {
-            sb.Append($"{tile.transform.position.x}:{tile.transform.position.z};{tile.Type}|");
-        }
-        File.WriteAllText(Application.dataPath + "/map01.txt",sb.ToString());
         Debug.Log("Saved");
     }
 
     public void Load()
     {
         ClearMap();
-        /*
-        byte[] bytes = File.ReadAllBytes(Application.dataPath + "/map01.owncucc");
+        byte[] bytes = File.ReadAllBytes(Application.dataPath + "/map01.td");
+
+
+
 
 
         for (int offset = 0; offset < bytes.Length; offset+=9)
@@ -150,9 +145,12 @@ public class MapEditor : MonoBehaviour
             byte type = bytes[offset+8];
             current.Setup(coords, type);
             current.transform.SetParent(TilesParent, true);
-
+            tiles.Add(coords, current);
         }
-        */
+        
+
+
+        /*
         string[] stringTiles = File.ReadAllText(Application.dataPath + "/map01.txt").Split('|');
         foreach (var item in stringTiles)
         {
@@ -161,7 +159,7 @@ public class MapEditor : MonoBehaviour
 
             CreateTileAt(new Vector3(float.Parse(c[0]), 0f, float.Parse(c[1])),byte.Parse(elements[1]));
         }
-
+        */
 
         Debug.Log("Loaded");
     }

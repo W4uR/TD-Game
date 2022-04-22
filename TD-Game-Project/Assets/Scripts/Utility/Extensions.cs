@@ -10,10 +10,12 @@ public static class Extensions
                     .GetRange(offset, length)
                     .ToArray();
     }
-    /*
-    public static List<byte> ToByteList(this int number)
+    
+    public static T[] Concat<T>(T[] array1, T[] array2)
     {
-
+        List<T> l = new List<T>(array1);
+        l.AddRange(array2);
+        return l.ToArray();
     }
-    */
+    
 }
