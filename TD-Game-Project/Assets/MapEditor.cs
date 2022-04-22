@@ -39,35 +39,25 @@ public class MapEditor : MonoBehaviour
         
     }
     */
-    // Update is called once per frame
-    void Update()
+
+
+    public void OnLeftMouseBtn()
     {
-        if (Input.GetMouseButton(0)) //Paint
-        {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-            Physics.Raycast(ray, out RaycastHit hitinfo);
+        Physics.Raycast(ray, out RaycastHit hitinfo);
 
-            CreateTileAt(hitinfo.point, 0);
-
-        }else if (Input.GetMouseButton(1)) //Erease
-        {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-
-            Physics.Raycast(ray, out RaycastHit hitinfo);
-
-            RemoveTileAt(hitinfo.point);
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Save();
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            Load();
-        }
+        CreateTileAt(hitinfo.point, 0);
     }
 
+    public void OnRightMouseBtn()
+    {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+        Physics.Raycast(ray, out RaycastHit hitinfo);
+
+        RemoveTileAt(hitinfo.point);
+    }
 
     void RemoveTileAt(Vector3 pos)
     {
@@ -120,7 +110,7 @@ public class MapEditor : MonoBehaviour
             }
             bytes[offset + 8] = tile.Value.Type;
 
-            offset+=9;
+            offset+=9; // 4 + 4 bytes are the coords and 1 byte is the type
         }
         
         File.WriteAllBytes(Application.dataPath + "/map01.td", bytes);
@@ -134,9 +124,6 @@ public class MapEditor : MonoBehaviour
         byte[] bytes = File.ReadAllBytes(Application.dataPath + "/map01.td");
 
 
-
-
-
         for (int offset = 0; offset < bytes.Length; offset+=9)
         {
             Tile current = Instantiate(tilePrefab, Vector3.zero, Quaternion.identity);
@@ -148,19 +135,6 @@ public class MapEditor : MonoBehaviour
             tiles.Add(coords, current);
         }
         
-
-
-        /*
-        string[] stringTiles = File.ReadAllText(Application.dataPath + "/map01.txt").Split('|');
-        foreach (var item in stringTiles)
-        {
-            string[] elements = item.Split(';');
-            string[] c = elements[0].Split(':');
-
-            CreateTileAt(new Vector3(float.Parse(c[0]), 0f, float.Parse(c[1])),byte.Parse(elements[1]));
-        }
-        */
-
         Debug.Log("Loaded");
     }
 
