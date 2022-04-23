@@ -18,6 +18,8 @@ public class MapEditor : LevelLoader
     private List<BrushPreset> brushPresets;
     private Brush brush;
     private int currentBrush = 0;
+    private byte currentType = 0;
+
     protected override void Awake()
     {
         base.Awake();
@@ -75,12 +77,17 @@ public class MapEditor : LevelLoader
                 currentBrush = brushPresets.Count - 1;
             }
         }
-        brush = new Brush(brushPresets[currentBrush], 0);
+        brush = new Brush(brushPresets[currentBrush], currentType);
         ShowBrush();
-        Debug.Log(currentBrush);
+        Debug.Log($"Selected brush: {currentBrush} : {currentType}");
     }
 
-
+    public void ScrollBrushType()
+    {
+        currentType = (byte)(++currentType % 2);
+        brush = new Brush(brushPresets[currentBrush], currentType);
+        Debug.Log($"Selected brush: {currentBrush} : {currentType}");
+    }
     
     public void OnLeftMouseBtn()
     {
@@ -88,7 +95,7 @@ public class MapEditor : LevelLoader
 
         Physics.Raycast(ray, out RaycastHit hitinfo);
 
-        CreateTileAt(HexCoords.CartesianToHex(hitinfo.point.x,hitinfo.point.z));
+        PaintAt(HexCoords.CartesianToHex(hitinfo.point.x,hitinfo.point.z));
     }
 
     public void OnRightMouseBtn()
@@ -97,10 +104,10 @@ public class MapEditor : LevelLoader
 
         Physics.Raycast(ray, out RaycastHit hitinfo);
 
-        RemoveTileAt(HexCoords.CartesianToHex(hitinfo.point.x,hitinfo.point.z));
+        EreaseAt(HexCoords.CartesianToHex(hitinfo.point.x,hitinfo.point.z));
     }
 
-    void RemoveTileAt(HexCoords center)
+    void EreaseAt(HexCoords center)
     {
 
         for (int i = 0; i < brush.Cells; i++)
@@ -109,13 +116,12 @@ public class MapEditor : LevelLoader
             HexCoords c = brush.preset.points[i] + center;
             if (tiles.ContainsKey(c))
             {
-                Destroy(tiles[c].gameObject);
-                tiles.Remove(c);
+                RemoveTileAt(c);
             }
         }
 
     }
-    void CreateTileAt(HexCoords center)
+    void PaintAt(HexCoords center)
     {
 
 
@@ -125,7 +131,7 @@ public class MapEditor : LevelLoader
 
             Tile current = Instantiate(tilePrefab, HexCoords.HexToCartesian(c), Quaternion.identity);
 
-            current.Setup(c, 0);
+            current.Setup(c, brush.Type);
 
             current.transform.SetParent(TilesParent, true);
 
@@ -138,7 +144,7 @@ public class MapEditor : LevelLoader
                 }
                 else
                 {
-                    tiles.Remove(center);
+                    RemoveTileAt(c);
                 }
             }
             tiles.Add(c, current);
@@ -147,6 +153,11 @@ public class MapEditor : LevelLoader
         
     }
 
+    public void RemoveTileAt(HexCoords coords)
+    {
+        Destroy(tiles[coords].gameObject);
+        tiles.Remove(coords);
+    }
 
     public override void Save()
     {

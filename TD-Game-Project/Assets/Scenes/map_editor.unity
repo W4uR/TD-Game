@@ -704,25 +704,27 @@ MonoBehaviour:
 
     [Q/E] - Cycle between brushes
 
+    [X]
+    - Cycle brush type
 
-    [Space]
-    - Pan camera
+
+    [Space] - Pan camera
 
     [Scroll Wheel] - Zoom in/out
 
-    [F] - Reset camera
+    [F]
+    - Reset camera
 
 
-    [S]
-    - Save map
+    [S] - Save map
 
     [L] - Load map
 
     [B] - Save as brush
 
 
-    [Alt + F4] - Exit
-    appliaction'
+    [Alt
+    + F4] - Exit appliaction'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

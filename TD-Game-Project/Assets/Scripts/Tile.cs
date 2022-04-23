@@ -14,7 +14,7 @@ public class Tile : MonoBehaviour
     public void Setup(HexCoords coords, byte type)
     {
         transform.position = HexCoords.HexToCartesian(coords);// + Vector3.up * transform.position.y;
-        text.text = coords.ToString();
+        text.text = type.ToString();
         name = $"Tile {coords}";
         this.type = type;
 

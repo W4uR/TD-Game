@@ -8,10 +8,10 @@ public class HexCoords
     int q, r;
 
 
-    static readonly private float size = 0.5f;
-    static readonly private float width = 2f * size;
+    static readonly private float outerRadius = 3.2f;
+    static readonly private float width = 2f * outerRadius;
     static readonly private float sqrt_3 = Mathf.Sqrt(3f);
-    static readonly private float height = sqrt_3 * size;
+    static readonly private float height = sqrt_3 * outerRadius;
     static readonly private Vector3Int[] cube_direction_vectors =
     {
         new Vector3Int( 1, 0, -1 ), new Vector3Int(1, -1, 0), new Vector3Int(0, -1, 1),
@@ -57,8 +57,8 @@ public class HexCoords
     
     public static Vector3 HexToCartesian(HexCoords coords)
     {
-        float x = (3f *.5f * coords.Q) * size;
-        float y = (sqrt_3 * .5f * coords.Q + sqrt_3 * coords.R) * size;
+        float x = (3f *.5f * coords.Q) * outerRadius;
+        float y = (sqrt_3 * .5f * coords.Q + sqrt_3 * coords.R) * outerRadius;
         return new Vector3(x , 0, y);
     }
 
@@ -71,8 +71,8 @@ public class HexCoords
     public static HexCoords CartesianToHex(float x, float y)
     {
         //Do magic here
-        float newQ = (2f / 3f) * x / size;
-        float newR = ((-1f / 3f) * x + (sqrt_3 / 3f) * y) / size;
+        float newQ = (2f / 3f) * x / outerRadius;
+        float newR = ((-1f / 3f) * x + (sqrt_3 / 3f) * y) / outerRadius;
 
         HexCoords coords = new HexCoords(RoundCoords(newQ, newR));
 

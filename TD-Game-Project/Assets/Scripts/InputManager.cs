@@ -47,6 +47,10 @@ public class InputManager : MonoBehaviour
         {
             me.ScrollBrush(false);
         }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            me.ScrollBrushType();
+        }
 
     }
 }

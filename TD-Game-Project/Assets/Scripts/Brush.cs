@@ -5,9 +5,9 @@ using UnityEngine;
 public class Brush
 {
     public BrushPreset preset;
-    int type = 0;
+    byte type = 0;
 
-    public Brush(BrushPreset _preset, int _type)
+    public Brush(BrushPreset _preset, byte _type)
     {
         preset = _preset;
         type = _type;
@@ -17,7 +17,7 @@ public class Brush
         preset = new BrushPreset();
     }
 
-    public int Type { get => type; set => type = value; }
+    public byte Type { get => type; set => type = value; }
     public int Cells { get => preset.points.Count; }
 }
 
