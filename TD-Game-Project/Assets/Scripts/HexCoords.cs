@@ -12,10 +12,22 @@ public class HexCoords
     static readonly private float width = 2f * outerRadius;
     static readonly private float sqrt_3 = Mathf.Sqrt(3f);
     static readonly private float height = sqrt_3 * outerRadius;
+
+
     static readonly private Vector3Int[] cube_direction_vectors =
     {
         new Vector3Int( 1, 0, -1 ), new Vector3Int(1, -1, 0), new Vector3Int(0, -1, 1),
         new Vector3Int(-1, 0, 1), new Vector3Int(-1, 1, 0), new Vector3Int(0, 1, -1),
+    };
+
+    public static readonly Dictionary<HexCoords, Vector4> neighbour_verticies = new Dictionary<HexCoords, Vector4>()
+    {
+        {new HexCoords(1, 0), new Vector4(width/4f,height/2f,width/2f,0f)},
+        {new HexCoords(1, -1), new Vector4(width/2f,0f,width/4f,-height/2f)},
+        {new HexCoords(0, -1), new Vector4(width/4f,-height/2f,-width/4f,-height/2f)},
+        {new HexCoords(-1, 0), new Vector4(-width/4f,-height/2f,-width/2f,0f)},
+        {new HexCoords(-1, 1), new Vector4(-width/2f,0f,-width/4f,height/2f)},
+        {new HexCoords(0, 1), new Vector4(-width/4f,height/2f,width/4f,height/2f)}
     };
 
     public static List<HexCoords> Neighbors(HexCoords hc)
@@ -30,18 +42,37 @@ public class HexCoords
         return neighbors;
     }
 
-    public int Q { get => q;}
-    public int R { get => r;}
-    public int S { get => -q-r; }
+
+
 
     public HexCoords(int q, int r)
     {
         this.q = q;
         this.r = r;
     }
+    
+    public List<HexCoords> Neighbours()
+    {
+        List<HexCoords> neighbours = new List<HexCoords>();
 
+        foreach (var direction in cube_direction_vectors)
+        {
+            neighbours.Add( this + new HexCoords(direction));
+        }
 
+        return neighbours;
+    }
 
+    public static bool IsNeighbour(HexCoords a, HexCoords b)
+    {
+        HexCoords vec = a - b;
+        foreach (var dir in cube_direction_vectors)
+        {
+            if(dir == vec) return true;
+        }
+        return false;
+    }
+    
     public HexCoords(Vector3Int cubeCoords)
     {
         q = cubeCoords.x;
@@ -57,8 +88,8 @@ public class HexCoords
     
     public static Vector3 HexToCartesian(HexCoords coords)
     {
-        float x = (3f *.5f * coords.Q) * outerRadius;
-        float y = (sqrt_3 * .5f * coords.Q + sqrt_3 * coords.R) * outerRadius;
+        float x = (3f *.5f * coords.q) * outerRadius;
+        float y = (sqrt_3 * .5f * coords.q + sqrt_3 * coords.r) * outerRadius;
         return new Vector3(x , 0, y);
     }
 
@@ -115,18 +146,26 @@ public class HexCoords
         return HashCode.Combine(q, r);
     }
 
+
+    public static bool operator ==(Vector3Int left, HexCoords right) => left.x == right.q && left.y == right.r;
+    public static bool operator !=(Vector3Int left, HexCoords right) => left.x != right.q || left.y != right.r;
+
     public static bool operator ==(HexCoords left, HexCoords right)
     {
-        return left.Q == right.Q && left.R == right.R;
+        return left.q == right.q && left.r == right.r;
     }
     public static bool operator !=(HexCoords left, HexCoords right)
     {
-        return left.Q != right.Q || left.R != right.R;
+        return left.q != right.q || left.r != right.r;
     }
 
     public static HexCoords operator + (HexCoords left,HexCoords right)
     {
         return new HexCoords(left.q + right.q, left.r + right.r);
+    }
+    public static HexCoords operator -(HexCoords left, HexCoords right)
+    {
+        return new HexCoords(left.q - right.q, left.r - right.r);
     }
 
     public override string ToString() => $"{q} : {r}";

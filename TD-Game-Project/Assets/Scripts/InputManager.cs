@@ -1,11 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InputManager : MonoBehaviour
 {
     Camera cam;
     public MapEditor me;
+
+    public static bool MouseOverUI => EventSystem.current.IsPointerOverGameObject();
+
+    public static event Action LeftMouseButton;
+    public static event Action RightMouseButton;
+
+    public static event Action E_Button;
+    public static event Action T_Button;
+    public static event Action<bool> MouseWheel;
+
 
     private void Awake()
     {
@@ -17,40 +29,31 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            me.OnLeftMouseBtn();
-
-        }else if (Input.GetMouseButton(1))
+            LeftMouseButton?.Invoke();
+        }
+        if (Input.GetMouseButton(1))
         {
-            me.OnRightMouseBtn();
+            RightMouseButton?.Invoke();
         }
 
-
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            me.Save();
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            me.Load();
-        }
-
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            me.SaveBrush();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            me.ScrollBrush(true);
-        }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            me.ScrollBrush(false);
+            E_Button?.Invoke();
         }
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.T))
         {
-            me.ScrollBrushType();
+            T_Button?.Invoke();
         }
 
+
+
+        if (Input.mouseScrollDelta.y > 0.1f)
+        {
+            MouseWheel?.Invoke(true);
+        }
+        else if (Input.mouseScrollDelta.y < -0.1f)
+        {
+            MouseWheel?.Invoke(false);
+        }
     }
 }

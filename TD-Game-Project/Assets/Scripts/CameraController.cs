@@ -18,10 +18,42 @@ public class CameraController : MonoBehaviour
         ResetCamera = cam.transform.position;
     }
 
+    private void OnEnable()
+    {
+        InputManager.MouseWheel += Zoom;
+    }
+    private void OnDisable()
+    {
+        InputManager.MouseWheel -= Zoom;
+    }
+
+
+    private void Zoom(bool into)
+    {
+        if (Input.GetKey(KeyCode.LeftControl) == false) return;
+
+        if (into)
+        {
+
+            if (cam.orthographicSize > 20f)
+            {
+                cam.orthographicSize -= 2f;
+            }
+        }
+        else
+        {
+            if (cam.orthographicSize < 70)
+            {
+                cam.orthographicSize += 2f;
+            }
+        }
+    }
+
     // Update is called once per frame
     void LateUpdate()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.LeftControl) == false) return;
+        if (Input.GetMouseButton(1))
         {
             Difference = (cam.ScreenToWorldPoint(Input.mousePosition)) - cam.transform.position;
             if (drag == false)
@@ -38,26 +70,11 @@ public class CameraController : MonoBehaviour
         {
             cam.transform.position = Origin - Difference;
         }
+
         if (Input.GetKeyDown(KeyCode.F))
         {
             cam.transform.position = ResetCamera;
         }
 
-
-        if (Input.mouseScrollDelta.y > 0.1f)
-        {
-
-            if (cam.orthographicSize > 3.5f)
-            {
-                cam.orthographicSize -= 0.5f;
-            }
-        }
-        else if (Input.mouseScrollDelta.y < -0.1f)
-        {
-            if (cam.orthographicSize < 25.5f)
-            {
-                cam.orthographicSize += 0.5f;
-            }
-        }
     }
 }
