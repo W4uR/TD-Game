@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomUIManager : MonoBehaviour
+public class NetworkGamePlayer : MonoBehaviour
 {
-
-    public Transform RoomPlayerParent;
     // Start is called before the first frame update
     void Start()
     {
