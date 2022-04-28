@@ -132,7 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 407482952}
-  - component: {fileID: 407482951}
+  - component: {fileID: 407482953}
   m_Layer: 0
   m_Name: Level_loader
   m_TagString: Untagged
@@ -140,20 +140,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &407482951
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 407482950}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46a729f405f36e545aa24030ab4ec843, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TilesParent: {fileID: 810116943}
-  tilePrefab: {fileID: 7909259452181087015, guid: 97076083abb256d4a83edb88a2328a48, type: 3}
 --- !u!4 &407482952
 Transform:
   m_ObjectHideFlags: 0
@@ -169,6 +155,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &407482953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407482950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46a729f405f36e545aa24030ab4ec843, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TilesParent: {fileID: 810116943}
+  tilePrefab: {fileID: 7909259452181087015, guid: 97076083abb256d4a83edb88a2328a48, type: 3}
 --- !u!1 &785899788
 GameObject:
   m_ObjectHideFlags: 0
