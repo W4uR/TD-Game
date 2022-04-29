@@ -36,6 +36,28 @@ namespace LevelEditorNameSpace
             LE_InputManager.LeftMouseButton -= HandleLeftMouseButton;
         }
 
+        public void SaveLevel(string levelName)
+        {
+
+            byte[] bytes = new byte[9 * tiles.Count];
+
+            int offset = 0;
+            foreach (var tile in tiles)
+            {
+                byte[] qrCoords = tile.Key.ToBytes();
+                for (int i = 0; i < 8; i++)
+                {
+                    bytes[offset + i] = qrCoords[i];
+                }
+                bytes[offset + 8] = tile.Value.Type;
+
+                offset += 9; // 4 + 4 bytes are the coords and 1 byte is the type
+            }
+            if (!Directory.Exists($"{Application.dataPath}/levels")) Directory.CreateDirectory($"{Application.dataPath}/levels");
+            File.WriteAllBytes($"{Application.dataPath}/levels/{levelName}.td", Extensions.Compress(bytes));
+
+            Debug.Log("Saved level: " + levelName);
+        }
 
         private Vector3 prevpos;
         private void Update()
@@ -119,28 +141,6 @@ namespace LevelEditorNameSpace
             tiles.Remove(coords);
         }
 
-        public override void Save()
-        {
-
-            byte[] bytes = new byte[9 * tiles.Count];
-
-            int offset = 0;
-            foreach (var tile in tiles)
-            {
-                byte[] qrCoords = tile.Key.ToBytes();
-                for (int i = 0; i < 8; i++)
-                {
-                    bytes[offset + i] = qrCoords[i];
-                }
-                bytes[offset + 8] = tile.Value.Type;
-
-                offset += 9; // 4 + 4 bytes are the coords and 1 byte is the type
-            }
-
-            File.WriteAllBytes(Application.dataPath + "/map01.td", Extensions.Compress(bytes));
-
-            Debug.Log("Saved");
-        }
 
         public void SaveBrush()
         {

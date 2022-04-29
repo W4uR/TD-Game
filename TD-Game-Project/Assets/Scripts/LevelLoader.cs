@@ -10,19 +10,11 @@ public class LevelLoader : MonoBehaviour
     [SerializeField]
     protected Tile tilePrefab;
 
-    protected Dictionary<HexCoords, Tile> tiles;
+    public Dictionary<HexCoords, Tile> tiles;
 
     protected virtual void Awake()
     {
         tiles = new Dictionary<HexCoords, Tile>();
-        if (GetType() == typeof(LevelLoader))
-        {
-            Load();
-            foreach (var tile in tiles.Values)
-            {
-                tile.gameObject.AddComponent<MeshCollider>();
-            }
-        }    // Not in editor
     }
 
     public virtual void Save()
@@ -30,11 +22,11 @@ public class LevelLoader : MonoBehaviour
 
     }
 
-    public void Load()
+    public void LoadLevel(string levelName)
     {
         ClearMap();
-
-        byte[] bytes = Extensions.Decompress(File.ReadAllBytes(Application.dataPath + "/map01.td"));
+        if (!Directory.Exists($"{Application.dataPath}/levels")) Directory.CreateDirectory($"{Application.dataPath}/levels");
+        byte[] bytes = Extensions.Decompress(File.ReadAllBytes($"{Application.dataPath}/levels/{levelName}.td"));
 
 
         for (int offset = 0; offset < bytes.Length; offset += 9)
