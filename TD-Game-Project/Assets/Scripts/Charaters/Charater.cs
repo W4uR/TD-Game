@@ -6,4 +6,5 @@ using UnityEngine;
 public class Charater : ScriptableObject
 {
     public new string name;
+    public Sprite icon;
 }

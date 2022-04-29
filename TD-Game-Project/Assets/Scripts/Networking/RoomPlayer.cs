@@ -9,8 +9,12 @@ using System;
 public class RoomPlayer : NetworkBehaviour
 {
 
+    [Header("Charaters")]
+    [SerializeField] public Charater[] Charaters = new Charater[0];
+
     [Header("UI")]
     [SerializeField] private GameObject lobbyUI = null;
+    [SerializeField] private Image[] playerCharaterImages = new Image[0];
     [SerializeField] private TMP_Text[] playerNameTexts = new TMP_Text[0];
     [SerializeField] private TMP_Text[] playerReadyTexts = new TMP_Text[0];
     [SerializeField] private Button startGameButton = null;
@@ -19,6 +23,8 @@ public class RoomPlayer : NetworkBehaviour
     public bool IsReady = false;
     [SyncVar(hook = nameof(HandleDisplayNameChanged))]
     public string DisplayName = "Loading...";
+    [SyncVar(hook = nameof(HandleCharaterChanged))]
+    public int CharaterIndex = 0;
 
     public bool IsLeader { set { startGameButton.gameObject.SetActive(value); } }
     private NetworkManagerTDGame room;
@@ -57,6 +63,14 @@ public class RoomPlayer : NetworkBehaviour
         IsReady = !IsReady;
         Room.NotifyLeaderOfReadyState();
     }
+
+    [Command]
+    public void CmdSelectCharater(int index)
+    {
+        CharaterIndex = index;
+
+    }
+
     [Command]
     public void CmdStartGame()
     {
@@ -69,6 +83,8 @@ public class RoomPlayer : NetworkBehaviour
     private void HandleDisplayNameChanged(string _, string name) => UpdateDisplay();
 
     private void HandleReadyStatusChanged(bool _, bool isReady) => UpdateDisplay();
+
+    private void HandleCharaterChanged(int _, int charIndex) => UpdateDisplay();
 
     internal void HandleReadyToStart(bool isReady2Start)
     {
@@ -94,13 +110,21 @@ public class RoomPlayer : NetworkBehaviour
         {
             playerNameTexts[i].text = "Waiting for Player...";
             playerReadyTexts[i].text = string.Empty;
+            playerCharaterImages[i].gameObject.SetActive(false);
         }
 
         for (int i = 0; i < Room.RoomPlayers.Count; i++)
         {
             playerNameTexts[i].text = Room.RoomPlayers[i].DisplayName;
             playerReadyTexts[i].text = Room.RoomPlayers[i].IsReady ? "<color=green>Ready</color>" : "<color=red>Not Ready</color>";
+
+            playerCharaterImages[i].sprite = Charaters[Room.RoomPlayers[i].CharaterIndex].icon;
+
+            playerCharaterImages[i].gameObject.SetActive(true);
         }
+
+
+
     }
 
 }

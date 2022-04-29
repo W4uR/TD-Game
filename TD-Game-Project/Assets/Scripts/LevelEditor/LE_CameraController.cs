@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public class LE_CameraController : MonoBehaviour
 {
 
     Camera cam;
@@ -20,11 +20,11 @@ public class CameraController : MonoBehaviour
 
     private void OnEnable()
     {
-        InputManager.MouseWheel += Zoom;
+        LE_InputManager.MouseWheel += Zoom;
     }
     private void OnDisable()
     {
-        InputManager.MouseWheel -= Zoom;
+        LE_InputManager.MouseWheel -= Zoom;
     }
 
 

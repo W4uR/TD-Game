@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class InputManager : MonoBehaviour
+public class LE_InputManager : MonoBehaviour
 {
-    Camera cam;
-    public MapEditor me;
 
     public static bool MouseOverUI => EventSystem.current.IsPointerOverGameObject();
 
@@ -17,13 +15,6 @@ public class InputManager : MonoBehaviour
     public static event Action E_Button;
     public static event Action T_Button;
     public static event Action<bool> MouseWheel;
-
-
-    private void Awake()
-    {
-        cam = Camera.main;
-
-    }
 
     private void LateUpdate()
     {

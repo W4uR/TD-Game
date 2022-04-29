@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c406efc90c3687e47871db1ad21668c6, type: 3}
   m_Name: Miner
   m_EditorClassIdentifier: 
-  id: 0
   name: Miner
+  icon: {fileID: 21300000, guid: 458fd4e47880eb741973fd137b253034, type: 3}

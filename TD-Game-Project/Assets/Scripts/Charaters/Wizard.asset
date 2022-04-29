@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c406efc90c3687e47871db1ad21668c6, type: 3}
   m_Name: Wizard
   m_EditorClassIdentifier: 
-  id: 2
   name: Wizard
+  icon: {fileID: 21300000, guid: ff779b1c9ff5642418f835fb9f6df12c, type: 3}

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuUIManager : MonoBehaviour
@@ -62,6 +63,12 @@ public class MenuUIManager : MonoBehaviour
 
         joinButton.interactable = false;
     }
+
+    public void LoadEditor()
+    {
+        SceneManager.LoadScene("Editor");
+    }
+
     public void RandomName()
     {
         nameInputField.text = Util.GenerateRandomName();
