@@ -5,11 +5,11 @@ using UnityEngine;
 public static class Util
 {
     #region consts
-
+    
     static readonly string[] ADJECTIVES =
     {
         "Small","Giant","Sad","Heroic","Furious","Sick","Basic","Sweet","Weak","Strong","Old","Young","Sus","Caring","Selfish","Lonely","Friendly","Clever","Idiot","Careful",
-        "Crazy","Wayward","Charming","Boring","Cunning","Grumpy","Magical"
+        "Crazy","Wayward","Charming","Boring","Cunning","Grumpy","Magical","Algebra"
     };
 
 
@@ -17,7 +17,7 @@ public static class Util
     static readonly string[] NAMES =
     {
         "Amara","Darvyn","Slyvek","Kyra","Soldelle","Sakakara","Phyrra","Jinvia","Nalra","Edmyla","Delvin","Starburst","Sunshine","Fada","Mistmael","Azura","Laimus","Silver Star",
-        "Thingol","Ailmar","Jewel","Voggur","Devella","Breya","Quamara","Taena","Lunarex","Vesryn","Bonna","Narbeth"
+        "Thingol","Ailmar","Jewel","Voggur","Devella","Breya","Quamara","Taena","Lunarex","Vesryn","Bonna","Narbeth","Linah","Burito"
     };
 
     #endregion

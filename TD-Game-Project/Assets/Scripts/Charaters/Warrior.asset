@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Warrior
   icon: {fileID: 21300000, guid: f77474748ce21d247afa24212048f05b, type: 3}
+  model: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}

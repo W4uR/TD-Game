@@ -6,18 +6,27 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class NetworkManagerTDGame : NetworkManager
 {
     [SerializeField] private int minPlayers = 2;
     [Scene] [SerializeField] private string menuScene = string.Empty;
+    [SerializeField] private string gameSceneName = string.Empty;
 
     [Header("Room")]
     [SerializeField] private RoomPlayer roomPlayerPrefab = null;
     [Header("Game")]
     [SerializeField] private GamePlayer gamePlayerPrefab = null;
+    [SerializeField] private GameObject playerSpawnSystem = null;
 
     public static event Action OnClientConnected;
     public static event Action OnClientDisconnected;
+    public static event Action<NetworkConnectionToClient> OnServerReadied;
+
+
+
+
+    public byte[] levelData;// BRÖH
 
     public List<RoomPlayer> RoomPlayers { get; } = new List<RoomPlayer>();
     public List<GamePlayer> GamePlayers { get; } = new List<GamePlayer>();
@@ -30,11 +39,7 @@ public class NetworkManagerTDGame : NetworkManager
             NetworkClient.RegisterPrefab(prefab);
         }
     }
-    private void FixedUpdate()
-    {
-        Debug.Log("Room Players: " + RoomPlayers.Count);
-        Debug.Log("Game Players: " + GamePlayers.Count);
-    }
+
     [Client]
     public override void OnClientConnect()
     {
@@ -115,7 +120,7 @@ public class NetworkManagerTDGame : NetworkManager
         RoomPlayers.Clear();
     }
 
-
+    [Server]
     public void StartGame()
     {
         if (SceneManager.GetActiveScene().path == menuScene)
@@ -129,15 +134,21 @@ public class NetworkManagerTDGame : NetworkManager
     public override void ServerChangeScene(string newSceneName)
     {
         //From Menu to Game
-        if (SceneManager.GetActiveScene().path == menuScene && newSceneName == "Map")
+        if (SceneManager.GetActiveScene().path == menuScene && newSceneName == gameSceneName)
         {
             for (int i = RoomPlayers.Count-1;i>=0;i--)
             {
-                Debug.Log("Iteration: " + i);
                 var conn = RoomPlayers[i].connectionToClient;
                 var gameplayerInstance = Instantiate(gamePlayerPrefab);
-                Debug.Log("Player instantiated: " + i + " " + RoomPlayers[i].DisplayName);
+                
+                //Set infos here
                 gameplayerInstance.SetDisplayName(RoomPlayers[i].DisplayName);
+                gameplayerInstance.SetCharater(RoomPlayers[i].GetSelectedCharater);
+
+
+
+
+
 
                 NetworkServer.Destroy(conn.identity.gameObject);
 
@@ -146,7 +157,24 @@ public class NetworkManagerTDGame : NetworkManager
             }
         }
         
-        
         base.ServerChangeScene(newSceneName);
+        
+    }
+
+    public override void OnServerReady(NetworkConnectionToClient conn)
+    {
+        base.OnServerReady(conn);
+
+        OnServerReadied?.Invoke(conn);
+    }
+
+
+    public override void OnServerSceneChanged(string sceneName)
+    {
+        if (sceneName == gameSceneName)
+        {
+            GameObject playerSpawnSystemInstance = Instantiate(playerSpawnSystem);
+            NetworkServer.Spawn(playerSpawnSystemInstance);
+        }
     }
 }

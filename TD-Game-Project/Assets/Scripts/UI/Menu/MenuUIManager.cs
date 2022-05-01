@@ -1,3 +1,4 @@
+using Mirror;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +10,12 @@ using UnityEngine.UI;
 public class MenuUIManager : MonoBehaviour
 {
 
-    [SerializeField] private NetworkManagerTDGame networkManager = null;
+    private NetworkManagerTDGame networkManagerTD;
+    private NetworkManagerTDGame NetworkManagerTD
+    {
+        get { if (networkManagerTD != null) return networkManagerTD; return networkManagerTD = NetworkManager.singleton as NetworkManagerTDGame; }
+    }
+
 
 
     [Header("UI")]
@@ -51,15 +57,15 @@ public class MenuUIManager : MonoBehaviour
     #region UI Methods
     public void HostRoom()
     {
-        networkManager.StartHost();
+        NetworkManagerTD.StartHost();
     }
     public void JoinRoom()
     {
         string ipAddress = ipAddressInputField.text;
         if (String.IsNullOrEmpty(ipAddress)) return;
 
-        networkManager.networkAddress = ipAddress;
-        networkManager.StartClient();
+        NetworkManagerTD.networkAddress = ipAddress;
+        NetworkManagerTD.StartClient();
 
         joinButton.interactable = false;
     }

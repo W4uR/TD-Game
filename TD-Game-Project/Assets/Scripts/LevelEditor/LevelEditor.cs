@@ -59,7 +59,7 @@ namespace LevelEditorNameSpace
             Debug.Log("Saved level: " + levelName);
         }
 
-        private Vector3 prevpos;
+
         private void Update()
         {
 
@@ -130,6 +130,7 @@ namespace LevelEditorNameSpace
                         RemoveTileAt(coord);
                     }
                 }
+                current.GetComponent<MeshRenderer>().material.color = brush.Type == 0 ? Color.green : Color.blue;
                 tiles.Add(coord, current);
             }
 

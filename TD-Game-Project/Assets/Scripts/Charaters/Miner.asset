@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Miner
   icon: {fileID: 21300000, guid: 458fd4e47880eb741973fd137b253034, type: 3}
+  model: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}

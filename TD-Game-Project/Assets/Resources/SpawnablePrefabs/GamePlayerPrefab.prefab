@@ -64,3 +64,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  gameplayPlayerPrefab: {fileID: 3941242065768500510, guid: f4050de8abf2f7745b4f6b7bb798e1fe, type: 3}
+  room: {fileID: 0}

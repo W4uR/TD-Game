@@ -10,7 +10,7 @@ public class CharaterSelecter : MonoBehaviour
     [SerializeField] RoomPlayer myRoomPlayer = null;
     [SerializeField] GameObject charaterButtonPrefab = null;
 
-    private List<Image> CharaterImages = new List<Image>();
+    private List<Image> CharacterPortraits = new List<Image>();
 
     // Start is called before the first frame update
     void Start()
@@ -20,8 +20,8 @@ public class CharaterSelecter : MonoBehaviour
             var charButton = Instantiate(charaterButtonPrefab, transform);
 
 
-            CharaterImages.Add(charButton.GetComponent<Image>());
-            CharaterImages[i].sprite = myRoomPlayer.Charaters[i].icon;
+            CharacterPortraits.Add(charButton.GetComponent<Image>());
+            CharacterPortraits[i].sprite = myRoomPlayer.Charaters[i].icon;
 
             var index = i;
             charButton.GetComponent<Button>().onClick.AddListener(delegate { SelectCharater(index); });
@@ -31,18 +31,18 @@ public class CharaterSelecter : MonoBehaviour
 
     void SelectCharater(int index)
     {
-        Debug.Log("CLICKED BUTTON  " + index);
+
         myRoomPlayer.CmdSelectCharater(index);
 
-        for (int i = 0; i < CharaterImages.Count; i++)
+        for (int i = 0; i < CharacterPortraits.Count; i++)
         {
             if(i == index)
             {
-                CharaterImages[i].color = Color.white;
+                CharacterPortraits[i].color = Color.white;
             }
             else
             {
-                CharaterImages[i].color = Color.gray;
+                CharacterPortraits[i].color = Color.gray;
             }
         }
     }

@@ -11,6 +11,13 @@ public class GamePlayer : NetworkBehaviour
 
     [SyncVar]
     private string displayName = string.Empty;
+    private Character playerCharater = null;
+
+    [SerializeField] GameObject gameplayPlayerPrefab;
+
+    private GameObject myPlayer;
+
+    [SerializeField]
 
     private NetworkManagerTDGame room;
     private NetworkManagerTDGame Room
@@ -35,5 +42,16 @@ public class GamePlayer : NetworkBehaviour
     {
         this.displayName = displayName;
         name = displayName;
+    }
+    public void SetCharater(Character _char)
+    {
+        playerCharater = _char;
+    }
+
+    [Command]
+    public void CmdSpawnAt(Vector3 pos)
+    {
+        myPlayer = Instantiate(gameplayPlayerPrefab,pos,Quaternion.identity);
+        NetworkServer.Spawn(myPlayer, gameObject);
     }
 }
