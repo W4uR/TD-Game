@@ -36,10 +36,10 @@ RectTransform:
   m_Father: {fileID: 7676119742891328498}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 80}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 289.89346, y: -736.161}
+  m_SizeDelta: {x: 579.7869, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4173973133773150850
 CanvasRenderer:
@@ -933,10 +933,10 @@ RectTransform:
   m_Father: {fileID: 7676119742891328498}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 80}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 289.89346, y: -605.221}
+  m_SizeDelta: {x: 579.7869, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2347394605353745988
 CanvasRenderer:
@@ -1927,10 +1927,10 @@ RectTransform:
   m_Father: {fileID: 7676119742891328498}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 80}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 289.89346, y: -474.28104}
+  m_SizeDelta: {x: 579.7869, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &433934302167273725
 CanvasRenderer:
@@ -2328,10 +2328,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  Charaters:
-  - {fileID: 11400000, guid: caacd372ac748244b89249b26cbd78fc, type: 2}
-  - {fileID: 11400000, guid: 5b86116cd3220854baed72fd299d3656, type: 2}
-  - {fileID: 11400000, guid: 75465eaeb2c7c12469a60851386437e2, type: 2}
   lobbyUI: {fileID: 6622842407351573025}
   playerCharaterImages:
   - {fileID: 4955755253620270733}
@@ -2352,7 +2348,7 @@ MonoBehaviour:
   levelSelectDropdown: {fileID: 634492905923140581}
   IsReady: 0
   DisplayName: Loading...
-  CharaterIndex: 0
+  CharacterIndex: 0
 --- !u!1 &6109080964730717281
 GameObject:
   m_ObjectHideFlags: 0
@@ -2734,7 +2730,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8459215555061107102
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3085,13 +3081,13 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5846842713179788587}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 8193419272987200190}
+        m_TargetAssemblyTypeName: RoomPlayer, Assembly-CSharp
+        m_MethodName: SelectLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3921,10 +3917,10 @@ RectTransform:
   m_Father: {fileID: 7676119742891328498}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 80}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 289.89346, y: -343.34103}
+  m_SizeDelta: {x: 579.7869, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5527510977474372927
 CanvasRenderer:

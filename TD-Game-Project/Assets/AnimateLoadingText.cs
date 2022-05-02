@@ -22,6 +22,7 @@ public class AnimateLoadingText : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        //if (gameObject.activeSelf == false) return;
         if (timer- speed >= 0f)
         {
             timer = 0;

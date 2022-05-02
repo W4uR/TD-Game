@@ -11,17 +11,22 @@ public class CharaterSelecter : MonoBehaviour
     [SerializeField] GameObject charaterButtonPrefab = null;
 
     private List<Image> CharacterPortraits = new List<Image>();
+    private NetworkManagerTDGame room;
+    private NetworkManagerTDGame Room
+    {
+        get { if (room != null) return room; return room = NetworkManager.singleton as NetworkManagerTDGame; }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < myRoomPlayer.Charaters.Length; i++)
+        for (int i = 0; i < Room.Characters.Length; i++)
         {
             var charButton = Instantiate(charaterButtonPrefab, transform);
 
 
             CharacterPortraits.Add(charButton.GetComponent<Image>());
-            CharacterPortraits[i].sprite = myRoomPlayer.Charaters[i].icon;
+            CharacterPortraits[i].sprite = Room.Characters[i].icon;
 
             var index = i;
             charButton.GetComponent<Button>().onClick.AddListener(delegate { SelectCharater(index); });

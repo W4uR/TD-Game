@@ -17,7 +17,7 @@ public class Tile : MonoBehaviour
         text.text = $"{coords}\n{type}";
         name = $"Tile {coords}";
         this.type = type;
-
+        GetComponent<MeshRenderer>().material.color = Type == 0 ? Color.green : Color.blue;
     }
 
 }

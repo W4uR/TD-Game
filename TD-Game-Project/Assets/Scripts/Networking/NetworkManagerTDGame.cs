@@ -17,7 +17,7 @@ public class NetworkManagerTDGame : NetworkManager
     [SerializeField] private RoomPlayer roomPlayerPrefab = null;
     [Header("Game")]
     [SerializeField] private GamePlayer gamePlayerPrefab = null;
-    [SerializeField] private GameObject playerSpawnSystem = null;
+    public Character[] Characters = new Character[0];
 
     public static event Action OnClientConnected;
     public static event Action OnClientDisconnected;
@@ -26,7 +26,7 @@ public class NetworkManagerTDGame : NetworkManager
 
 
 
-    public byte[] levelData;// BRÖH
+    public byte[] LevelData;// BRÖH
 
     public List<RoomPlayer> RoomPlayers { get; } = new List<RoomPlayer>();
     public List<GamePlayer> GamePlayers { get; } = new List<GamePlayer>();
@@ -139,15 +139,11 @@ public class NetworkManagerTDGame : NetworkManager
             for (int i = RoomPlayers.Count-1;i>=0;i--)
             {
                 var conn = RoomPlayers[i].connectionToClient;
-                var gameplayerInstance = Instantiate(gamePlayerPrefab);
+                var gameplayerInstance = Instantiate(gamePlayerPrefab,Vector3.up*40f,Quaternion.identity);
                 
                 //Set infos here
                 gameplayerInstance.SetDisplayName(RoomPlayers[i].DisplayName);
-                gameplayerInstance.SetCharater(RoomPlayers[i].GetSelectedCharater);
-
-
-
-
+                gameplayerInstance.SetCharater(RoomPlayers[i].CharacterIndex);
 
 
                 NetworkServer.Destroy(conn.identity.gameObject);
@@ -160,7 +156,14 @@ public class NetworkManagerTDGame : NetworkManager
         base.ServerChangeScene(newSceneName);
         
     }
-
+    public override void OnServerSceneChanged(string sceneName)
+    {
+        base.OnServerSceneChanged(sceneName);
+        if (sceneName == gameSceneName)
+        {
+            LevelLoader.Singleton.AddColliders();
+        }
+    }
     public override void OnServerReady(NetworkConnectionToClient conn)
     {
         base.OnServerReady(conn);
@@ -168,13 +171,4 @@ public class NetworkManagerTDGame : NetworkManager
         OnServerReadied?.Invoke(conn);
     }
 
-
-    public override void OnServerSceneChanged(string sceneName)
-    {
-        if (sceneName == gameSceneName)
-        {
-            GameObject playerSpawnSystemInstance = Instantiate(playerSpawnSystem);
-            NetworkServer.Spawn(playerSpawnSystemInstance);
-        }
-    }
 }

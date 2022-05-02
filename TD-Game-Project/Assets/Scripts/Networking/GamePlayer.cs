@@ -5,25 +5,30 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using System.Linq;
 
 public class GamePlayer : NetworkBehaviour
 {
 
     [SyncVar]
     private string displayName = string.Empty;
-    private Character playerCharater = null;
+    [SyncVar(hook =nameof(ApplyCharacter))]
+    private int characterIndex = -1;
 
-    [SerializeField] GameObject gameplayPlayerPrefab;
-
-    private GameObject myPlayer;
-
-    [SerializeField]
+    public Character GetSelectedCharacter => Room.Characters[characterIndex];
+    [SerializeField] MeshFilter myModel = null;
 
     private NetworkManagerTDGame room;
     private NetworkManagerTDGame Room
     {
         get { if (room != null) return room; return room = NetworkManager.singleton as NetworkManagerTDGame; }
     }
+    public override void OnStartServer() => NetworkManagerTDGame.OnServerReadied += LoadLevelForConnection;
+
+    #region Network
+
+    [ServerCallback]
+    private void OnDestroy() => NetworkManagerTDGame.OnServerReadied -= LoadLevelForConnection;
 
 
     public override void OnStartClient()
@@ -43,15 +48,37 @@ public class GamePlayer : NetworkBehaviour
         this.displayName = displayName;
         name = displayName;
     }
-    public void SetCharater(Character _char)
+    [Server]
+    public void SetCharater(int _characterIndex)
     {
-        playerCharater = _char;
+        characterIndex = _characterIndex;
+    }
+    public void ApplyCharacter(int _,int characterIndex)
+    {
+        myModel.mesh = GetSelectedCharacter.model;
     }
 
-    [Command]
-    public void CmdSpawnAt(Vector3 pos)
+
+    [Server]
+    private void LoadLevelForConnection(NetworkConnectionToClient conn)
     {
-        myPlayer = Instantiate(gameplayPlayerPrefab,pos,Quaternion.identity);
-        NetworkServer.Spawn(myPlayer, gameObject);
+        LoadLevel(conn,Room.LevelData);
+        
     }
+    [TargetRpc]
+    private void LoadLevel(NetworkConnection target, byte[] levelData)
+    {
+        LevelLoader.Singleton.LoadLevel(levelData);
+        GameUIManager.Singleton.OnLevelLoaded();
+        CmdSpawnAtRandom();
+    }
+    [Command]
+    private void CmdSpawnAtRandom()
+    {
+        transform.position = LevelLoader.Singleton.GetRandomSpawnPoint().Value;
+    }
+
+
+
+    #endregion
 }

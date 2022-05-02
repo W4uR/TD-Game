@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Mirror;
 using UnityEngine;
 
@@ -12,20 +13,38 @@ public class LevelLoader : MonoBehaviour
     [SerializeField]
     protected Tile tilePrefab;
 
-    public Dictionary<HexCoords, Tile> tiles;
+    protected static Dictionary<HexCoords, Tile> tiles;
+
+    bool addCollider = false;
 
     private NetworkManagerTDGame room;
+    public static LevelLoader Singleton { get; private set; }
     private NetworkManagerTDGame Room
     {
         get { if (room != null) return room; return room = NetworkManager.singleton as NetworkManagerTDGame; }
     }
 
-
+    public Vector3? GetRandomSpawnPoint()
+    {
+        var rnd = new System.Random();
+        var spawnTile = tiles.Values.Where(x => x.Type == 1).OrderBy(x => rnd.Next()).FirstOrDefault();
+        if (spawnTile == null)
+        {
+            return null;
+        }
+        return spawnTile.transform.position+Vector3.up*2f;
+    }
 
 
     protected virtual void Awake()
     {
         tiles = new Dictionary<HexCoords, Tile>();
+        if (Singleton == null)
+            Singleton = this;
+        else
+        {
+            Debug.LogError("There can be only one LevelLoader");
+        }
     }
 
 
@@ -41,15 +60,15 @@ public class LevelLoader : MonoBehaviour
             current.Setup(coords, type);
             current.transform.SetParent(TilesParent, true);
             tiles.Add(coords, current);
-
-            if (type == 1) //spawner tile
-            {
-
-            }
-
+            
+            current.GetComponent<MeshCollider>().enabled = addCollider;
         }
         Debug.Log("Loaded");
-        // Spawn player
+    }
+
+    internal void AddColliders()
+    {
+        addCollider = true;
     }
 
     public void LoadLevel(string levelName)

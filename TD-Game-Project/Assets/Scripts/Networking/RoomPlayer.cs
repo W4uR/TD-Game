@@ -11,9 +11,6 @@ using System.Linq;
 public class RoomPlayer : NetworkBehaviour
 {
 
-    [Header("Charaters")]
-    [SerializeField] public Character[] Charaters = new Character[0];
-
     [Header("UI")]
     [SerializeField] private GameObject lobbyUI = null;
     [SerializeField] private Image[] playerCharaterImages = new Image[0];
@@ -27,7 +24,7 @@ public class RoomPlayer : NetworkBehaviour
     [SyncVar(hook = nameof(HandleDisplayNameChanged))]
     public string DisplayName = "Loading...";
     [SyncVar(hook = nameof(HandleCharaterChanged))]
-    public int CharaterIndex = 0;
+    public int CharacterIndex = 0;
 
     public bool IsLeader { set { startGameButton.gameObject.SetActive(value); levelSelectDropdown.gameObject.SetActive(true); FillLevelDropdown() ; } }
     private NetworkManagerTDGame room;
@@ -36,13 +33,12 @@ public class RoomPlayer : NetworkBehaviour
         get { if (room != null) return room; return room = NetworkManager.singleton as NetworkManagerTDGame; }
     }
 
-    public Character GetSelectedCharater => Charaters[CharaterIndex];
 
 
     public void SelectLevel()
     {
-        string levelName = levelSelectDropdown.options[levelSelectDropdown.value] + ".td";
-        //Room.LevelData = Extensions.Decompress(File.ReadAllBytes($"{Application.dataPath}/levels/{levelName}.td"));
+        string levelName = levelSelectDropdown.options[levelSelectDropdown.value].text;
+        Room.LevelData = Extensions.Decompress(File.ReadAllBytes($"{Application.dataPath}/levels/{levelName}.td"));
     }
 
     
@@ -59,7 +55,9 @@ public class RoomPlayer : NetworkBehaviour
         {
             levelSelectDropdown.options.Add(new TMP_Dropdown.OptionData(level));
         }
+        levelSelectDropdown.value = 0;
         levelSelectDropdown.RefreshShownValue();
+        SelectLevel();
     }
 
     public override void OnStartAuthority()
@@ -96,7 +94,7 @@ public class RoomPlayer : NetworkBehaviour
     [Command]
     public void CmdSelectCharater(int index)
     {
-        CharaterIndex = index;
+        CharacterIndex = index;
 
     }
 
@@ -122,6 +120,8 @@ public class RoomPlayer : NetworkBehaviour
 
     internal void HandleReadyToStart(bool isReady2Start)
     {
+        if (startGameButton == null) return;
+
         startGameButton.interactable = isReady2Start;
     }
 
@@ -152,7 +152,7 @@ public class RoomPlayer : NetworkBehaviour
             playerNameTexts[i].text = Room.RoomPlayers[i].DisplayName;
             playerReadyTexts[i].text = Room.RoomPlayers[i].IsReady ? "<color=green>Ready</color>" : "<color=red>Not Ready</color>";
 
-            playerCharaterImages[i].sprite = Charaters[Room.RoomPlayers[i].CharaterIndex].icon;
+            playerCharaterImages[i].sprite = Room.Characters[Room.RoomPlayers[i].CharacterIndex].icon;
 
             playerCharaterImages[i].gameObject.SetActive(true);
         }

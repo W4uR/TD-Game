@@ -1,18 +1,27 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameUIManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] GameObject loadingPanel = null;
+
+    public static GameUIManager Singleton = null;
+
+    private void Awake()
     {
-        
+        if (Singleton == null)
+            Singleton = this;
+        else
+        {
+            Debug.LogError("There can be only one LevelLoader");
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public void OnLevelLoaded()
     {
-        
+        Destroy(loadingPanel);
     }
 }

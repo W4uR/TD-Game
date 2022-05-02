@@ -8,8 +8,8 @@ public class HexCoords
     int q, r;
 
 
-    static readonly private float outerRadius = 3.2f;
-    static readonly private float width = 2f * outerRadius;
+    static readonly private float width = 9.6f;
+    static readonly private float outerRadius = width*0.5f;
     static readonly private float sqrt_3 = Mathf.Sqrt(3f);
     static readonly private float height = sqrt_3 * outerRadius;
 

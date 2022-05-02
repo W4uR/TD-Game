@@ -217,14 +217,20 @@ MonoBehaviour:
   networkAddress: localhost
   maxConnections: 4
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 3941242065768500510, guid: f4050de8abf2f7745b4f6b7bb798e1fe, type: 3}
+  playerPrefab: {fileID: 5846842713179788587, guid: 6e124a7e05fc76f44bcb5c156f943180, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs: []
   minPlayers: 1
   menuScene: Assets/Scenes/Menu.unity
+  gameSceneName: Map
   roomPlayerPrefab: {fileID: 8193419272987200190, guid: 035ca5df11aa4684c87c2903067cc2aa, type: 3}
   gamePlayerPrefab: {fileID: 3059836564577761109, guid: 6e124a7e05fc76f44bcb5c156f943180, type: 3}
+  Characters:
+  - {fileID: 11400000, guid: caacd372ac748244b89249b26cbd78fc, type: 2}
+  - {fileID: 11400000, guid: 5b86116cd3220854baed72fd299d3656, type: 2}
+  - {fileID: 11400000, guid: 75465eaeb2c7c12469a60851386437e2, type: 2}
+  LevelData: 
 --- !u!1 &216011595
 GameObject:
   m_ObjectHideFlags: 0
@@ -801,7 +807,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6663d3474ca26684bb92342b40d2da82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkManager: {fileID: 163954793}
   ipAddressInputField: {fileID: 2035155995}
   nameInputField: {fileID: 1244063778}
   joinButton: {fileID: 540786900}
