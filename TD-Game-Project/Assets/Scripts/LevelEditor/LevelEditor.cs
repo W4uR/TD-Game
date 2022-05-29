@@ -116,7 +116,7 @@ namespace LevelEditorNameSpace
 
                 current.Setup(coord, brush.Type);
 
-                current.transform.SetParent(TilesParent, true);
+                current.transform.SetParent(transform, true);
 
                 if (tiles.ContainsKey(coord))
                 {

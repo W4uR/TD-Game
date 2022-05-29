@@ -164,12 +164,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 163954785}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetX: 0
+  offsetX: 257
   offsetY: 0
 --- !u!114 &163954792
 MonoBehaviour:
@@ -211,13 +211,13 @@ MonoBehaviour:
   runInBackground: 1
   autoStartServerBuild: 1
   serverTickRate: 30
-  offlineScene: 
+  offlineScene: Assets/Scenes/Menu.unity
   onlineScene: Assets/Scenes/Menu.unity
   transport: {fileID: 163954792}
   networkAddress: localhost
   maxConnections: 4
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 5846842713179788587, guid: 6e124a7e05fc76f44bcb5c156f943180, type: 3}
+  playerPrefab: {fileID: 5846842713179788587, guid: 035ca5df11aa4684c87c2903067cc2aa, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs: []
@@ -225,12 +225,12 @@ MonoBehaviour:
   menuScene: Assets/Scenes/Menu.unity
   gameSceneName: Map
   roomPlayerPrefab: {fileID: 8193419272987200190, guid: 035ca5df11aa4684c87c2903067cc2aa, type: 3}
-  gamePlayerPrefab: {fileID: 3059836564577761109, guid: 6e124a7e05fc76f44bcb5c156f943180, type: 3}
+  gamePlayerPrefab: {fileID: 1277194461201136587, guid: d43a51a784076c7489714ec9d829efca, type: 3}
+  networkLevelLoader: {fileID: 1157720409276955109, guid: db00ddaceb21aa045a7a3215e2853dc6, type: 3}
   Characters:
   - {fileID: 11400000, guid: caacd372ac748244b89249b26cbd78fc, type: 2}
   - {fileID: 11400000, guid: 5b86116cd3220854baed72fd299d3656, type: 2}
   - {fileID: 11400000, guid: 75465eaeb2c7c12469a60851386437e2, type: 2}
-  LevelData: 
 --- !u!1 &216011595
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,6 +242,7 @@ GameObject:
   - component: {fileID: 216011598}
   - component: {fileID: 216011597}
   - component: {fileID: 216011596}
+  - component: {fileID: 216011599}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -307,14 +308,48 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 216011595}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.29984337, y: 0.3619685, z: -0.12419918, w: 0.87386924}
+  m_LocalPosition: {x: -10, y: 12, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &216011599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 216011595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowDebugText: 0
+  m_ShowCameraFrustum: 1
+  m_IgnoreTimeScale: 0
+  m_WorldUpOverride: {fileID: 0}
+  m_UpdateMethod: 2
+  m_BlendUpdateMethod: 1
+  m_DefaultBlend:
+    m_Style: 1
+    m_Time: 2
+    m_CustomCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  m_CustomBlends: {fileID: 0}
+  m_CameraCutEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_CameraActivatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &249125673
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,10 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using UnityEngine;
 
 public static class Extensions
 {
+
+
+    private static Matrix4x4 isoMatrix = Matrix4x4.Rotate(Quaternion.Euler(0, 45, 0));
+    public static Vector3 ToIso(this Vector3 input) => isoMatrix.MultiplyPoint3x4(input);
+    public static Vector3 To3D(this Vector2 vector) => new Vector3(vector.x, 0, vector.y);
+    public static Vector3 ToIso(this Vector2 input) => input.To3D().ToIso();
     public static T[] SubArray<T>(this T[] array, int offset, int length)
     {
         return new List<T>(array)
@@ -28,7 +35,6 @@ public static class Extensions
         }
         return output.ToArray();
     }
-
     public static byte[] Decompress(byte[] data)
     {
         MemoryStream input = new MemoryStream(data);
@@ -38,5 +44,11 @@ public static class Extensions
             dstream.CopyTo(output);
         }
         return output.ToArray();
+    }
+
+    public static T GetRandomElement<T>(this IEnumerable<T> container)
+    {
+        var rnd = new System.Random();
+        return container.OrderBy(x => rnd.Next()).FirstOrDefault();
     }
 }

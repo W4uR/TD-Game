@@ -2903,7 +2903,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e490a08e8a5c6a34ca2f6d19e7c1e860, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TilesParent: {fileID: 160062813}
   tilePrefab: {fileID: 7909259452181087015, guid: 97076083abb256d4a83edb88a2328a48, type: 3}
   brushCellPrefab: {fileID: 5681771303461722650, guid: 5c7851282ac4bb741b4568b90f3f7afa, type: 3}
   Cam: {fileID: 963194227}
@@ -5163,7 +5162,7 @@ MonoBehaviour:
     [Ctrl]+[Scroll
     Wheel] - Zoom in/out
 
-    [F] - Reset camera
+    [Ctrl]+[F] - Reset camera
 
 
     [Alt + F4] - Exit appliaction'

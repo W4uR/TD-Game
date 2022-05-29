@@ -48,7 +48,7 @@ namespace LevelEditorNameSpace
                 Debug.LogError("Level name must not contain '.' charater");
                 return;
             }
-            if (levelEditor.GetRandomSpawnPoint() == null)
+            if (LevelEditor.GetRandomSpawnPoint() == null)
             {
                 Debug.LogError("Level must contain at least one Spawn tile");
                 return;

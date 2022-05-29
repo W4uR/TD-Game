@@ -22,7 +22,7 @@ public static class Util
 
     #endregion
 
-
+    public static Vector3 GRAVITY => Vector3.down * 9.16f;
 
     public static string GenerateRandomName()
     {

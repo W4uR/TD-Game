@@ -5,34 +5,26 @@ using System.IO;
 using System.Linq;
 using Mirror;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
-    public Transform TilesParent;
-
     [SerializeField]
     protected Tile tilePrefab;
 
     protected static Dictionary<HexCoords, Tile> tiles;
+    public static event Action OnLevelLoaded;
+    bool IsEditor => SceneManager.GetActiveScene().name == "Editor";
 
-    bool addCollider = false;
 
-    private NetworkManagerTDGame room;
+
     public static LevelLoader Singleton { get; private set; }
-    private NetworkManagerTDGame Room
-    {
-        get { if (room != null) return room; return room = NetworkManager.singleton as NetworkManagerTDGame; }
-    }
+    public static List<Vector3> SpawnPoints = new List<Vector3>();
 
-    public Vector3? GetRandomSpawnPoint()
+    public static Vector3 GetRandomSpawnPoint()
     {
         var rnd = new System.Random();
-        var spawnTile = tiles.Values.Where(x => x.Type == 1).OrderBy(x => rnd.Next()).FirstOrDefault();
-        if (spawnTile == null)
-        {
-            return null;
-        }
-        return spawnTile.transform.position+Vector3.up*2f;
+        return SpawnPoints.OrderBy(x => rnd.Next()).FirstOrDefault();
     }
 
 
@@ -46,9 +38,28 @@ public class LevelLoader : MonoBehaviour
             Debug.LogError("There can be only one LevelLoader");
         }
     }
+    private void OnDestroy()
+    {
+        ClearMap();
+    }
+    public static List<Vector3> SpawnPointsFromData(byte[] levelData)
+    {
+        List<Vector3> spawnpoints = new List<Vector3>();
+        for (int offset = 0; offset < levelData.Length; offset += 9)
+        {
+            HexCoords coords = new HexCoords(levelData.SubArray(offset, 8));
+            byte type = levelData[offset + 8];
 
+            if (type == 1)
+            {
+                spawnpoints.Add(HexCoords.HexToCartesian(coords)+Vector3.up);
+            }
 
-    public void LoadLevel(byte[] levelData)
+        }
+        return spawnpoints;
+    }
+
+    public bool LoadLevel(byte[] levelData)
     {
         ClearMap();
         for (int offset = 0; offset < levelData.Length; offset += 9)
@@ -58,19 +69,42 @@ public class LevelLoader : MonoBehaviour
             HexCoords coords = new HexCoords(levelData.SubArray(offset, 8));
             byte type = levelData[offset + 8];
             current.Setup(coords, type);
-            current.transform.SetParent(TilesParent, true);
+            current.transform.SetParent(transform, true);
             tiles.Add(coords, current);
+
+            current.GetComponent<MeshCollider>().enabled = !IsEditor;
+            if (type == 1)
+            {
+                SpawnPoints.Add(current.transform.position + Vector3.up*2f);
+            }
             
-            current.GetComponent<MeshCollider>().enabled = addCollider;
         }
         Debug.Log("Loaded");
+        OnLevelLoaded?.Invoke();
+        return true;
     }
-
-    internal void AddColliders()
+    /*
+    private void CombineMeshes()
     {
-        addCollider = true;
+        var combine = new CombineInstance[tiles.Count];
+        var tileMeshes = tiles.Values.Select(x => x.GetComponent<MeshFilter>()).ToArray();
+        for (int i = 0; i < tileMeshes.Length; i++)
+        {
+            combine[i].mesh = tileMeshes[i].mesh;
+            combine[i].transform = tileMeshes[i].transform.localToWorldMatrix;
+        }
+        var mesh = new Mesh();
+        mesh.CombineMeshes(combine);
+        GetComponent<MeshFilter>().mesh = mesh;
+        GetComponent<MeshRenderer>().material = tiles.First().Value.GetComponent<MeshRenderer>().material;
+        GetComponent<MeshCollider>().sharedMesh = mesh;
+        GetComponent<MeshCollider>().enabled = true;
+        foreach (var tile in tiles)
+        {
+            tile.Value.gameObject.SetActive(false);
+        }
     }
-
+    */
     public void LoadLevel(string levelName)
     {     
         if (!Directory.Exists($"{Application.dataPath}/levels")) Directory.CreateDirectory($"{Application.dataPath}/levels");
@@ -86,5 +120,6 @@ public class LevelLoader : MonoBehaviour
             Destroy(tile.Value.gameObject);
         }
         tiles.Clear();
+        SpawnPoints.Clear();
     }
 }

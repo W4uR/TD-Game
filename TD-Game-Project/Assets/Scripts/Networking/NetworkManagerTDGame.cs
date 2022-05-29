@@ -17,6 +17,7 @@ public class NetworkManagerTDGame : NetworkManager
     [SerializeField] private RoomPlayer roomPlayerPrefab = null;
     [Header("Game")]
     [SerializeField] private GamePlayer gamePlayerPrefab = null;
+    [SerializeField] private GameObject networkLevelLoader = null;
     public Character[] Characters = new Character[0];
 
     public static event Action OnClientConnected;
@@ -26,7 +27,7 @@ public class NetworkManagerTDGame : NetworkManager
 
 
 
-    public byte[] LevelData;// BRÖH
+    public static byte[] SelectedLevelData;// Only on server
 
     public List<RoomPlayer> RoomPlayers { get; } = new List<RoomPlayer>();
     public List<GamePlayer> GamePlayers { get; } = new List<GamePlayer>();
@@ -39,6 +40,9 @@ public class NetworkManagerTDGame : NetworkManager
             NetworkClient.RegisterPrefab(prefab);
         }
     }
+
+
+
 
     [Client]
     public override void OnClientConnect()
@@ -139,7 +143,11 @@ public class NetworkManagerTDGame : NetworkManager
             for (int i = RoomPlayers.Count-1;i>=0;i--)
             {
                 var conn = RoomPlayers[i].connectionToClient;
-                var gameplayerInstance = Instantiate(gamePlayerPrefab,Vector3.up*40f,Quaternion.identity);
+
+
+                //get spawnpoints from leveldata
+                var spawnPoint = LevelLoader.SpawnPointsFromData(SelectedLevelData).GetRandomElement();
+                var gameplayerInstance = Instantiate(gamePlayerPrefab,spawnPoint+Vector3.up*i,Quaternion.identity);//,Vector3.up*40f,Quaternion.identity);
                 
                 //Set infos here
                 gameplayerInstance.SetDisplayName(RoomPlayers[i].DisplayName);
@@ -154,20 +162,22 @@ public class NetworkManagerTDGame : NetworkManager
         }
         
         base.ServerChangeScene(newSceneName);
-        
     }
+
     public override void OnServerSceneChanged(string sceneName)
     {
-        base.OnServerSceneChanged(sceneName);
+        Debug.Log(3);
+        
         if (sceneName == gameSceneName)
         {
-            LevelLoader.Singleton.AddColliders();
-        }
+            GameObject nll = Instantiate(networkLevelLoader);
+            NetworkServer.Spawn(nll);
+        }       
     }
+
     public override void OnServerReady(NetworkConnectionToClient conn)
     {
         base.OnServerReady(conn);
-
         OnServerReadied?.Invoke(conn);
     }
 

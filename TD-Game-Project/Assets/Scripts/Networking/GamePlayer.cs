@@ -9,37 +9,41 @@ using System.Linq;
 
 public class GamePlayer : NetworkBehaviour
 {
-
+    [SyncVar]
+    private int Id = -1;
     [SyncVar]
     private string displayName = string.Empty;
     [SyncVar(hook =nameof(ApplyCharacter))]
     private int characterIndex = -1;
 
+    [SerializeField]
+    MeshFilter myMesh;
+
     public Character GetSelectedCharacter => Room.Characters[characterIndex];
-    [SerializeField] MeshFilter myModel = null;
 
     private NetworkManagerTDGame room;
     private NetworkManagerTDGame Room
     {
         get { if (room != null) return room; return room = NetworkManager.singleton as NetworkManagerTDGame; }
     }
-    public override void OnStartServer() => NetworkManagerTDGame.OnServerReadied += LoadLevelForConnection;
+
 
     #region Network
-
-    [ServerCallback]
-    private void OnDestroy() => NetworkManagerTDGame.OnServerReadied -= LoadLevelForConnection;
-
-
     public override void OnStartClient()
     {
         DontDestroyOnLoad(gameObject);
+        CmdRegisterMyself();
         Room.GamePlayers.Add(this);
     }
 
     public override void OnStopClient()
     {
         Room.GamePlayers.Remove(this);
+    }
+    [Command]
+    private void CmdRegisterMyself()
+    {
+        Id = Room.RoomPlayers.Count;
     }
 
     [Server]
@@ -53,32 +57,9 @@ public class GamePlayer : NetworkBehaviour
     {
         characterIndex = _characterIndex;
     }
-    public void ApplyCharacter(int _,int characterIndex)
+    public void ApplyCharacter(int _, int index)
     {
-        myModel.mesh = GetSelectedCharacter.model;
+        myMesh.mesh = Room.Characters[index].model;
     }
-
-
-    [Server]
-    private void LoadLevelForConnection(NetworkConnectionToClient conn)
-    {
-        LoadLevel(conn,Room.LevelData);
-        
-    }
-    [TargetRpc]
-    private void LoadLevel(NetworkConnection target, byte[] levelData)
-    {
-        LevelLoader.Singleton.LoadLevel(levelData);
-        GameUIManager.Singleton.OnLevelLoaded();
-        CmdSpawnAtRandom();
-    }
-    [Command]
-    private void CmdSpawnAtRandom()
-    {
-        transform.position = LevelLoader.Singleton.GetRandomSpawnPoint().Value;
-    }
-
-
-
     #endregion
 }

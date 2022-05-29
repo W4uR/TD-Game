@@ -38,7 +38,7 @@ public class RoomPlayer : NetworkBehaviour
     public void SelectLevel()
     {
         string levelName = levelSelectDropdown.options[levelSelectDropdown.value].text;
-        Room.LevelData = Extensions.Decompress(File.ReadAllBytes($"{Application.dataPath}/levels/{levelName}.td"));
+        NetworkManagerTDGame.SelectedLevelData = Extensions.Decompress(File.ReadAllBytes($"{Application.dataPath}/levels/{levelName}.td"));
     }
 
     
@@ -103,6 +103,7 @@ public class RoomPlayer : NetworkBehaviour
     {
         if (Room.Leader != this) return;
         // Start Game
+
         Debug.Log("Game started");
         Room.StartGame();
     }
