@@ -13,6 +13,7 @@ public class HexCoords
     static readonly private float sqrt_3 = Mathf.Sqrt(3f);
     static readonly private float height = sqrt_3 * outerRadius;
 
+    public static int Size => 2*sizeof(int); //4+4 bytes q and r
 
     static readonly private Vector3Int[] cube_direction_vectors =
     {

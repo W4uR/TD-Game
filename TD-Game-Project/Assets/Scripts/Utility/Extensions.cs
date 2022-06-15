@@ -51,4 +51,17 @@ public static class Extensions
         var rnd = new System.Random();
         return container.OrderBy(x => rnd.Next()).FirstOrDefault();
     }
+
+    public static T[] To1DArray<T>( this T[][] matrix)
+    {
+        T[] array = new T[matrix.Length];
+        int w = matrix.GetLength(0);
+        int h = matrix.GetLength(1);
+        for (int i = 0; i < array.Length; i++)
+        {
+            array[i] = matrix[i%w][i/w];
+        }
+        return array;
+    }
+
 }

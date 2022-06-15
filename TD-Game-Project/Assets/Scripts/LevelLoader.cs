@@ -13,20 +13,14 @@ public class LevelLoader : MonoBehaviour
     protected Tile tilePrefab;
 
     protected static Dictionary<HexCoords, Tile> tiles;
+    protected static List<Wave> waves;
     public static event Action OnLevelLoaded;
     bool IsEditor => SceneManager.GetActiveScene().name == "Editor";
 
 
 
     public static LevelLoader Singleton { get; private set; }
-    public static List<Vector3> SpawnPoints = new List<Vector3>();
-
-    public static Vector3 GetRandomSpawnPoint()
-    {
-        var rnd = new System.Random();
-        return SpawnPoints.OrderBy(x => rnd.Next()).FirstOrDefault();
-    }
-
+    public int NumberOfSpawnPoints => tiles.Values.Count(x => x.Type == TileType.Spawner);
 
     protected virtual void Awake()
     {
@@ -45,41 +39,61 @@ public class LevelLoader : MonoBehaviour
     public static List<Vector3> SpawnPointsFromData(byte[] levelData)
     {
         List<Vector3> spawnpoints = new List<Vector3>();
-        for (int offset = 0; offset < levelData.Length; offset += 9)
-        {
-            HexCoords coords = new HexCoords(levelData.SubArray(offset, 8));
-            byte type = levelData[offset + 8];
+        byte version = levelData[0];
+        int numberOfTiles = BitConverter.ToInt32(new byte[] { levelData[1], levelData[2], 0, 0 });
+        int pointer = 4;
 
-            if (type == 1)
+        //Load tiles
+        for (int i = 0; i < numberOfTiles; i++)
+        {
+            HexCoords coords = new HexCoords(levelData.SubArray(pointer, HexCoords.Size));
+            pointer += HexCoords.Size;
+            TileType type = (TileType)levelData[pointer++];
+            if (type == TileType.Spawner)
             {
                 spawnpoints.Add(HexCoords.HexToCartesian(coords)+Vector3.up);
             }
-
         }
+
         return spawnpoints;
     }
 
     public bool LoadLevel(byte[] levelData)
     {
         ClearMap();
-        for (int offset = 0; offset < levelData.Length; offset += 9)
+
+        byte version = levelData[0];
+        int numberOfTiles = BitConverter.ToInt32(new byte[] { levelData[1], levelData[2], 0, 0 });
+        byte numberOfwaves = levelData[3];//Kinda useless for now anyways
+        int pointer = 4;
+
+        //Do magic here
+        //Load tiles
+        for (int i = 0; i < numberOfTiles; i++)
         {
-            Tile current = Instantiate(tilePrefab, Vector3.zero, Quaternion.identity);
-
-            HexCoords coords = new HexCoords(levelData.SubArray(offset, 8));
-            byte type = levelData[offset + 8];
-            current.Setup(coords, type);
-            current.transform.SetParent(transform, true);
-            tiles.Add(coords, current);
-
-            current.GetComponent<MeshCollider>().enabled = !IsEditor;
-            if (type == 1)
-            {
-                SpawnPoints.Add(current.transform.position + Vector3.up*2f);
-            }
-            
+            Tile newTile = Instantiate(tilePrefab);
+            HexCoords coords = new HexCoords(levelData.SubArray(pointer, HexCoords.Size));
+            pointer += HexCoords.Size;
+            TileType type = (TileType)levelData[pointer++];
+            newTile.Setup(coords, type);
+            newTile.transform.SetParent(transform, true);
+            tiles.Add(coords, newTile);
         }
-        Debug.Log("Loaded");
+        //Load waves
+        while (pointer<levelData.Length) //each cycle is one wave
+        {
+            Wave wave = new Wave();
+            byte numberOfWaveObjects = levelData[pointer++];
+            for (byte i = 0; i < numberOfWaveObjects; i++)
+            {
+                WaveObject waveObject = new WaveObject(levelData[pointer++], levelData[pointer++], levelData[pointer++], levelData[pointer++]);
+                wave.AddWaveObject(waveObject);
+            }
+            waves.Add(wave);
+        }
+        
+
+        Debug.Log("Loaded level");
         OnLevelLoaded?.Invoke();
         return true;
     }
@@ -120,6 +134,5 @@ public class LevelLoader : MonoBehaviour
             Destroy(tile.Value.gameObject);
         }
         tiles.Clear();
-        SpawnPoints.Clear();
     }
 }

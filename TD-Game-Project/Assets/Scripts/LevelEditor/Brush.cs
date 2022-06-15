@@ -10,13 +10,13 @@ namespace LevelEditorNameSpace
     {
         private int currentPreset = 0;
         private BrushPreset[] presets;
-        byte type = 0;
+        TileType type = TileType.Plain;
 
         private List<GameObject> previewCells;
 
 
         bool isEreaser;
-        public byte Type { get => type; }
+        public TileType Type { get => type; }
         public bool IsEreaser { get => isEreaser; }
 
 
@@ -28,7 +28,7 @@ namespace LevelEditorNameSpace
             LE_InputManager.MouseWheel -= ScrollBrush;
             LE_InputManager.T_Button -= ScrollType;
         }
-        public Brush(string[] _preset_paths, byte _type, bool _isEreaser)
+        public Brush(string[] _preset_paths, TileType _type, bool _isEreaser)
         {
             presets = new BrushPreset[_preset_paths.Length + 1];
             presets[0] = new BrushPreset();
@@ -100,7 +100,7 @@ namespace LevelEditorNameSpace
 
         public void ScrollType()
         {
-            type = (byte)(++type % 2);
+            //type = (byte)(++type % 2);
         }
 
 

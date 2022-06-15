@@ -1,18 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
+using System;
 
 namespace LevelEditorNameSpace
 {
     public class LevelEditor : LevelLoader
     {
 
+        [SerializeField]
 
         public GameObject brushCellPrefab;
 
-
         public Camera Cam;
-        public Brush brush;
+
+        [SerializeField]
+        BrushSelector brushSelector;
+
+        Brush brush => brushSelector.SelectedBrush;
 
         public static LevelEditor Instance;
 
@@ -23,8 +29,6 @@ namespace LevelEditorNameSpace
             if (Instance == null) Instance = this;
 
             Cam = Camera.main;
-
-            LoadBrushes();
         }
 
         private void OnEnable()
@@ -39,20 +43,42 @@ namespace LevelEditorNameSpace
         public void SaveLevel(string levelName)
         {
 
-            byte[] bytes = new byte[9 * tiles.Count];
+            byte[] bytes = new byte[4+(Tile.Size * tiles.Count)+(waves.Sum(x=>x.Size)+waves.Count)];
 
-            int offset = 0;
+            bytes[0] = 0;//Version
+            bytes[1] = BitConverter.GetBytes(tiles.Count)[0];//lower byte
+            bytes[2] = BitConverter.GetBytes(tiles.Count)[1];//higher byte
+            bytes[3] = (byte)waves.Count;
+
+            //Write Tiles
+            int pointer = 4;
             foreach (var tile in tiles)
             {
                 byte[] qrCoords = tile.Key.ToBytes();
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < HexCoords.Size; i++)
                 {
-                    bytes[offset + i] = qrCoords[i];
+                    bytes[pointer + i] = qrCoords[i];
                 }
-                bytes[offset + 8] = tile.Value.Type;
+                bytes[pointer + HexCoords.Size] = (byte)tile.Value.Type;
 
-                offset += 9; // 4 + 4 bytes are the coords and 1 byte is the type
+                pointer += Tile.Size;
             }
+            //Write Waves
+            foreach (var wave in waves)
+            {
+                byte waveSize = wave.NumberOfWaveObjects;
+                byte[] waveBytes = wave.ToBytes;
+                bytes[pointer++] = waveSize;
+                for (int i = 0; i < waveBytes.Length; i++)
+                {
+                    bytes[pointer++] = waveBytes[i];
+                }
+            }
+            if (pointer != bytes.Length)
+            {
+                Debug.LogError("ITT A BAJ");
+            }
+
             if (!Directory.Exists($"{Application.dataPath}/levels")) Directory.CreateDirectory($"{Application.dataPath}/levels");
             File.WriteAllBytes($"{Application.dataPath}/levels/{levelName}.td", Extensions.Compress(bytes));
 
@@ -62,7 +88,6 @@ namespace LevelEditorNameSpace
 
         private void Update()
         {
-
             brush.Show(HexCoords.CartesianToHex(Cam.ScreenToWorldPoint(Input.mousePosition)));
         }
 
@@ -91,7 +116,6 @@ namespace LevelEditorNameSpace
 
         }
 
-
         void EreaseAt(HexCoords center)
         {
 
@@ -110,13 +134,9 @@ namespace LevelEditorNameSpace
 
             foreach (HexCoords direction in brush.GetCells())
             {
-                HexCoords coord = direction + center;
+                HexCoords coord = center + direction;
 
-                Tile current = Instantiate(tilePrefab, HexCoords.HexToCartesian(coord), Quaternion.identity);
-
-                current.Setup(coord, brush.Type);
-
-                current.transform.SetParent(transform, true);
+                Tile current = CreateTile(coord);
 
                 if (tiles.ContainsKey(coord))
                 {
@@ -168,19 +188,21 @@ namespace LevelEditorNameSpace
             File.WriteAllBytes($"{Application.dataPath}/editor/brush_{fCount}.tdb", Extensions.Compress(bytes));
 
             Debug.Log("Saved Brush");
-            LoadBrushes(brush.Type);
+            brushSelector.LoadBrushes();
         }
 
-        public void LoadBrushes(byte type = 0)
+
+        private Tile CreateTile(HexCoords coord)
         {
+            Tile current = Instantiate(tilePrefab, HexCoords.HexToCartesian(coord), Quaternion.identity);
 
-            string[] presetPaths = Directory.GetFiles($"{Application.dataPath}/editor/", "brush_*.tdb", SearchOption.AllDirectories);
+            current.Setup(coord, brush.Type);
 
-            brush?.Clear();
-            brush = new Brush(presetPaths, type, brush == null ? false : brush.IsEreaser); //Mindjárt elhányom magam
-
-            Debug.Log("Loaded Brushes");
+            current.transform.SetParent(transform, true);
+            return current;
         }
+
 
     }
+
 }
