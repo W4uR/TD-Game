@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,54 +11,68 @@ namespace LevelEditorNameSpace {
 
     public class BrushSelector : MonoBehaviour
     {
+
         [SerializeField]
         GameObject Button_Brush_Prefab = null;
-        [SerializeField]
-        Slider slider_Brush = null;
 
-        public Brush SelectedBrush { get; private set; }
+        [Serializable]
+        public struct Preset
+        {
+            public List<HexCoords> coords;
+            public Sprite image;
+        }
+        [SerializeField] Preset[] presets;
+
+
+
         public TileType SelectedType { get; private set; }
+        public bool IsEreaser { get; private set; }
+        public BrushPreset SelectedBrush => brushes[brushIndex];
 
+
+        private List<BrushPreset> brushes;
+        private int brushIndex = 0;
+        
         public void LoadBrushes()
         {
-            //--Clearing
-            for (int i = transform.childCount - 1; i >= 0; i--)
+            int index = 0;
+            foreach (var preset in presets)
             {
-                Destroy(transform.GetChild(i));
+                GameObject button = Instantiate(Button_Brush_Prefab, transform);
+                button.GetComponent<Image>().sprite = preset.image;
+                int currentIndex = index;
+                button.GetComponent<Button>().onClick.AddListener(delegate { SetBrush(currentIndex); });
+                brushes.Add(new BrushPreset(preset.coords));
+                index++;
             }
-            SelectedBrush?.Clear();
-            //-----
-
-            string[] presetPaths = Directory.GetFiles($"{Application.dataPath}/editor/", "brush_*.tdb", SearchOption.AllDirectories);
-            SelectedBrush = new Brush(presetPaths, SelectedType, SelectedBrush == null ? false : SelectedBrush.IsEreaser); //Mindjárt elhányom magam
-
-            Instantiate(Button_Brush_Prefab, transform);
-            for (int i = 0; i < presetPaths.Length; i++)
-            {
-                GameObject brush_button = Instantiate(Button_Brush_Prefab, transform);
-
-                var index = i;
-                brush_button.GetComponent<Button>().onClick.AddListener(delegate { SelectBrush(index); });
-            }
-
-            Debug.Log("Loaded Brushes");
         }
-
+        
         private void Start()
         {
-            slider_Brush.onValueChanged.AddListener(OnSliderValueChanged);
+            brushes = new List<BrushPreset>();
+
             LoadBrushes();
         }
 
-        public void OnSliderValueChanged(float val)
-        {
 
+        public void ToggleEreaser()
+        {
+            IsEreaser = !IsEreaser;
+            Debug.Log(IsEreaser);
         }
 
-        void SelectBrush(int index)
+        void SetBrush(int index)
         {
-
+            Debug.Log(index + ". brush preset was selected");
+            brushIndex = index;
         }
+
+        public void SetType(TileType type)
+        {
+            SelectedType = type;
+        }
+
+
     }
 
 }

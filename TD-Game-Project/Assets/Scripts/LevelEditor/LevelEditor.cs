@@ -18,7 +18,6 @@ namespace LevelEditorNameSpace
         [SerializeField]
         BrushSelector brushSelector;
 
-        Brush brush => brushSelector.SelectedBrush;
 
         public static LevelEditor Instance;
 
@@ -85,12 +84,12 @@ namespace LevelEditorNameSpace
             Debug.Log("Saved level: " + levelName);
         }
 
-
+        /*
         private void Update()
         {
             brush.Show(HexCoords.CartesianToHex(Cam.ScreenToWorldPoint(Input.mousePosition)));
         }
-
+        */
 
 
         public void HandleLeftMouseButton()
@@ -105,7 +104,7 @@ namespace LevelEditorNameSpace
 
             HexCoords center = HexCoords.CartesianToHex(hitinfo.point.x, hitinfo.point.z);
 
-            if (brush.IsEreaser)
+            if (brushSelector.IsEreaser)
             {
                 EreaseAt(center);
             }
@@ -119,7 +118,7 @@ namespace LevelEditorNameSpace
         void EreaseAt(HexCoords center)
         {
 
-            foreach (HexCoords direction in brush.GetCells())
+            foreach (HexCoords direction in brushSelector.SelectedBrush.GetCells())
             {
                 HexCoords coord = direction + center;
                 if (tiles.ContainsKey(coord))
@@ -132,7 +131,7 @@ namespace LevelEditorNameSpace
         void PaintAt(HexCoords center)
         {
 
-            foreach (HexCoords direction in brush.GetCells())
+            foreach (HexCoords direction in brushSelector.SelectedBrush.GetCells())
             {
                 HexCoords coord = center + direction;
 
@@ -150,7 +149,7 @@ namespace LevelEditorNameSpace
                         RemoveTileAt(coord);
                     }
                 }
-                current.GetComponent<MeshRenderer>().material.color = brush.Type == 0 ? Color.green : Color.blue;
+                current.GetComponent<MeshRenderer>().material.color = brushSelector.SelectedType == 0 ? Color.green : Color.blue;
                 tiles.Add(coord, current);
             }
 
@@ -165,7 +164,7 @@ namespace LevelEditorNameSpace
 
         public void SaveBrush()
         {
-            byte[] bytes = new byte[8 * tiles.Count];
+            byte[] bytes = new byte[HexCoords.Size * tiles.Count];
 
             int offset = 0;
             foreach (var tile in tiles)
@@ -176,7 +175,7 @@ namespace LevelEditorNameSpace
                     bytes[offset + i] = qrCoords[i];
                 }
 
-                offset += 8;
+                offset += HexCoords.Size;
             }
 
             if (Directory.Exists($"{Application.dataPath}/editor/") == false)
@@ -196,7 +195,7 @@ namespace LevelEditorNameSpace
         {
             Tile current = Instantiate(tilePrefab, HexCoords.HexToCartesian(coord), Quaternion.identity);
 
-            current.Setup(coord, brush.Type);
+            current.Setup(coord, brushSelector.SelectedType);
 
             current.transform.SetParent(transform, true);
             return current;

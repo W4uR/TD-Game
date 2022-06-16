@@ -37,14 +37,14 @@ public class LE_CameraController : MonoBehaviour
 
             if (cam.orthographicSize > 20f)
             {
-                cam.orthographicSize -= 2f;
+                cam.orthographicSize -= 4.7f;
             }
         }
         else
         {
-            if (cam.orthographicSize < 70)
+            if (cam.orthographicSize < 200)
             {
-                cam.orthographicSize += 2f;
+                cam.orthographicSize += 4.7f;
             }
         }
     }

@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace LevelEditorNameSpace
 {
+    /*
     public class Brush
     {
         private int currentPreset = 0;
@@ -110,7 +111,7 @@ namespace LevelEditorNameSpace
         }
     }
 
-
+    */
 
     public class BrushPreset
     {
@@ -123,13 +124,15 @@ namespace LevelEditorNameSpace
                 points.Add(new HexCoords(bytes.SubArray(offset, 8)));
             }
         }
-
+        public BrushPreset(List<HexCoords> coords)
+        {
+            points = coords;
+        }
         public BrushPreset()
         {
             points = new List<HexCoords>();
             points.Add(new HexCoords(0, 0));
         }
-
 
 
         public IEnumerable<HexCoords> GetCells()
