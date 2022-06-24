@@ -15,12 +15,12 @@ namespace LevelEditorNameSpace
         BrushSelector brushSelector = null;
 
         [Serializable]
-        public struct Types
+        private struct Type
         {
             public TileType number;
             public Sprite image;
         }
-        [SerializeField] Types[] types;
+        [SerializeField] Type[] types;
 
         private void Start()
         {

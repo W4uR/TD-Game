@@ -9,14 +9,13 @@ namespace LevelEditorNameSpace
     public class LevelEditor : LevelLoader
     {
 
-        [SerializeField]
-
-        public GameObject brushCellPrefab;
-
         public Camera Cam;
 
         [SerializeField]
         BrushSelector brushSelector;
+
+        private bool paintEmptyOnly;
+        private bool isCursor = false;
 
 
         public static LevelEditor Instance;
@@ -84,19 +83,19 @@ namespace LevelEditorNameSpace
             Debug.Log("Saved level: " + levelName);
         }
 
-        /*
+        
         private void Update()
         {
-            brush.Show(HexCoords.CartesianToHex(Cam.ScreenToWorldPoint(Input.mousePosition)));
+            brushSelector.ShowPreview(HexCoords.CartesianToHex(Cam.ScreenToWorldPoint(Input.mousePosition)));
         }
-        */
+        
 
 
         public void HandleLeftMouseButton()
         {
 
             if (LE_InputManager.MouseOverUI) return;
-
+            if (isCursor) return;
 
             Ray ray = Cam.ScreenPointToRay(Input.mousePosition);
 
@@ -131,15 +130,17 @@ namespace LevelEditorNameSpace
         void PaintAt(HexCoords center)
         {
 
-            foreach (HexCoords direction in brushSelector.SelectedBrush.GetCells())
+            foreach (HexCoords offset in brushSelector.SelectedBrush.GetCells())
             {
-                HexCoords coord = center + direction;
+                HexCoords coord = center + offset;
 
                 Tile current = CreateTile(coord);
 
+
                 if (tiles.ContainsKey(coord))
                 {
-                    if (tiles[coord].Type == current.Type)
+                    
+                    if (tiles[coord].Type == current.Type || paintEmptyOnly)
                     {
                         Destroy(current.gameObject);
                         continue;
@@ -149,7 +150,9 @@ namespace LevelEditorNameSpace
                         RemoveTileAt(coord);
                     }
                 }
-                current.GetComponent<MeshRenderer>().material.color = brushSelector.SelectedType == 0 ? Color.green : Color.blue;
+
+                
+
                 tiles.Add(coord, current);
             }
 
@@ -161,46 +164,24 @@ namespace LevelEditorNameSpace
             tiles.Remove(coords);
         }
 
-
-        public void SaveBrush()
-        {
-            byte[] bytes = new byte[HexCoords.Size * tiles.Count];
-
-            int offset = 0;
-            foreach (var tile in tiles)
-            {
-                byte[] qrCoords = tile.Key.ToBytes();
-                for (int i = 0; i < 8; i++)
-                {
-                    bytes[offset + i] = qrCoords[i];
-                }
-
-                offset += HexCoords.Size;
-            }
-
-            if (Directory.Exists($"{Application.dataPath}/editor/") == false)
-            {
-                Directory.CreateDirectory($"{Application.dataPath}/editor/");
-            }
-
-            int fCount = Directory.GetFiles($"{Application.dataPath}/editor/", "brush_*.tdb", SearchOption.TopDirectoryOnly).Length;
-            File.WriteAllBytes($"{Application.dataPath}/editor/brush_{fCount}.tdb", Extensions.Compress(bytes));
-
-            Debug.Log("Saved Brush");
-            brushSelector.LoadBrushes();
-        }
-
-
         private Tile CreateTile(HexCoords coord)
         {
-            Tile current = Instantiate(tilePrefab, HexCoords.HexToCartesian(coord), Quaternion.identity);
+            Tile current = Instantiate(tilePrefab, HexCoords.HexToCartesian(coord), Quaternion.identity, transform);
 
             current.Setup(coord, brushSelector.SelectedType);
 
-            current.transform.SetParent(transform, true);
             return current;
         }
 
+        public void TogglePaintEmpty()
+        {
+            paintEmptyOnly = !paintEmptyOnly;
+        }
+
+        public void ToggleCursor()
+        {
+            isCursor = !isCursor;
+        }
 
     }
 

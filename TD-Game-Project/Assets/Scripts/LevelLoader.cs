@@ -25,6 +25,8 @@ public class LevelLoader : MonoBehaviour
     protected virtual void Awake()
     {
         tiles = new Dictionary<HexCoords, Tile>();
+        waves = new List<Wave>();
+        AddWave();
         if (Singleton == null)
             Singleton = this;
         else
@@ -97,28 +99,7 @@ public class LevelLoader : MonoBehaviour
         OnLevelLoaded?.Invoke();
         return true;
     }
-    /*
-    private void CombineMeshes()
-    {
-        var combine = new CombineInstance[tiles.Count];
-        var tileMeshes = tiles.Values.Select(x => x.GetComponent<MeshFilter>()).ToArray();
-        for (int i = 0; i < tileMeshes.Length; i++)
-        {
-            combine[i].mesh = tileMeshes[i].mesh;
-            combine[i].transform = tileMeshes[i].transform.localToWorldMatrix;
-        }
-        var mesh = new Mesh();
-        mesh.CombineMeshes(combine);
-        GetComponent<MeshFilter>().mesh = mesh;
-        GetComponent<MeshRenderer>().material = tiles.First().Value.GetComponent<MeshRenderer>().material;
-        GetComponent<MeshCollider>().sharedMesh = mesh;
-        GetComponent<MeshCollider>().enabled = true;
-        foreach (var tile in tiles)
-        {
-            tile.Value.gameObject.SetActive(false);
-        }
-    }
-    */
+
     public void LoadLevel(string levelName)
     {     
         if (!Directory.Exists($"{Application.dataPath}/levels")) Directory.CreateDirectory($"{Application.dataPath}/levels");
@@ -135,4 +116,14 @@ public class LevelLoader : MonoBehaviour
         }
         tiles.Clear();
     }
+
+    public static void AddWave()
+    {
+        waves.Add(new Wave());
+    }
+    public static void DeleteWave(int waveIndex)
+    {
+        waves.RemoveAt(waveIndex);
+    }
+    public static int WaveCount => waves.Count;
 }

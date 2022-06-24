@@ -14,8 +14,6 @@ namespace LevelEditorNameSpace
         
         public static LE_UIManager Instance;
 
-        [Header("UI")]
-        [SerializeField] TMP_Text Ereaser_text;
 
         [Header("Level Saving/Loading")]
         [SerializeField] TMP_InputField levelName_InputField = null;
@@ -93,9 +91,5 @@ namespace LevelEditorNameSpace
             levelName_DropDown.RefreshShownValue();
         }
 
-        public void SetIsEreaser(bool isEreser)
-        {
-            Ereaser_text.text = isEreser ? "Ereaser" : "Brush";
-        }
     }
 }

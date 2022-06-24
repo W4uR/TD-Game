@@ -16,7 +16,7 @@ namespace LevelEditorNameSpace {
         GameObject Button_Brush_Prefab = null;
 
         [Serializable]
-        public struct Preset
+        private struct Preset
         {
             public List<HexCoords> coords;
             public Sprite image;
@@ -50,7 +50,7 @@ namespace LevelEditorNameSpace {
         private void Start()
         {
             brushes = new List<BrushPreset>();
-
+            previewCells = new List<GameObject>();
             LoadBrushes();
         }
 
@@ -58,12 +58,10 @@ namespace LevelEditorNameSpace {
         public void ToggleEreaser()
         {
             IsEreaser = !IsEreaser;
-            Debug.Log(IsEreaser);
         }
 
         void SetBrush(int index)
         {
-            Debug.Log(index + ". brush preset was selected");
             brushIndex = index;
         }
 
@@ -73,6 +71,32 @@ namespace LevelEditorNameSpace {
         }
 
 
+
+        [SerializeField]
+
+        private GameObject brushCellPrefab;
+        private List<GameObject> previewCells;
+
+        internal void ShowPreview(HexCoords center)
+        {
+
+            foreach (var previewCell in previewCells)
+            {
+                GameObject.Destroy(previewCell);
+            }
+            previewCells.Clear();
+
+
+
+            foreach (HexCoords direction in SelectedBrush.GetCells())
+            {
+                HexCoords coord = direction + center;
+
+                GameObject current = Instantiate(brushCellPrefab, HexCoords.HexToCartesian(coord) + Vector3.up, Quaternion.identity);
+                previewCells.Add(current);
+            }
+
+        }
     }
 
 }
