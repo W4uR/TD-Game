@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Enemy", menuName = "Enemy")]
-public class Enemy : MonoBehaviour
+public class Enemy : ScriptableObject
 {
-    byte id;
-    int health;
-    new string name;
-    Mesh model;
+    public byte id;
+    public int health;
+    public new string name;
+    public Sprite icon;
+    public Mesh model;
 
 }

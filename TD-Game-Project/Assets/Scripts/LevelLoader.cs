@@ -13,12 +13,8 @@ public class LevelLoader : MonoBehaviour
     protected Tile tilePrefab;
 
     protected static Dictionary<HexCoords, Tile> tiles;
-    protected static List<Wave> waves;
+    private static List<Wave> waves;
     public static event Action OnLevelLoaded;
-    bool IsEditor => SceneManager.GetActiveScene().name == "Editor";
-
-
-
     public static LevelLoader Singleton { get; private set; }
     public int NumberOfSpawnPoints => tiles.Values.Count(x => x.Type == TileType.Spawner);
 
@@ -26,7 +22,6 @@ public class LevelLoader : MonoBehaviour
     {
         tiles = new Dictionary<HexCoords, Tile>();
         waves = new List<Wave>();
-        AddWave();
         if (Singleton == null)
             Singleton = this;
         else
@@ -59,7 +54,6 @@ public class LevelLoader : MonoBehaviour
 
         return spawnpoints;
     }
-
     public bool LoadLevel(byte[] levelData)
     {
         ClearMap();
@@ -99,7 +93,6 @@ public class LevelLoader : MonoBehaviour
         OnLevelLoaded?.Invoke();
         return true;
     }
-
     public void LoadLevel(string levelName)
     {     
         if (!Directory.Exists($"{Application.dataPath}/levels")) Directory.CreateDirectory($"{Application.dataPath}/levels");
@@ -107,7 +100,6 @@ public class LevelLoader : MonoBehaviour
 
         LoadLevel(bytes);   
     }
-
     protected void ClearMap()
     {
         foreach (var tile in tiles)
@@ -115,15 +107,6 @@ public class LevelLoader : MonoBehaviour
             Destroy(tile.Value.gameObject);
         }
         tiles.Clear();
-    }
-
-    public static void AddWave()
-    {
-        waves.Add(new Wave());
-    }
-    public static void DeleteWave(int waveIndex)
-    {
-        waves.RemoveAt(waveIndex);
     }
     public static int WaveCount => waves.Count;
 }
