@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63676ac18d3ff1748a7a4b3a7072f408, type: 3}
   m_Name: Orc
   m_EditorClassIdentifier: 
-  id: 0
+  id: 1
   health: 340
   name: Orc
   icon: {fileID: 555123980, guid: ec39fad17c8553e49b9578cef2d009b8, type: 3}

@@ -49,6 +49,7 @@ public class Tile : MonoBehaviour
 
     }
 
+
     // File management
     public static int Size => HexCoords.Size + 1;
 }

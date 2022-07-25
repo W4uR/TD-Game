@@ -29,4 +29,18 @@ public static class Util
 
         return NAMES[Random.Range(0, NAMES.Length)] + " the " + ADJECTIVES[Random.Range(0, ADJECTIVES.Length)];
     }
+
+    public static void MurderChildNoWitnesses(GameObject obj)
+    {
+        obj.transform.SetParent(null);
+        GameObject.Destroy(obj);
+    }
+    public static Dictionary<byte, string> EnemyName = new Dictionary<byte, string>()
+    {
+        {0,"Goblin" },{1,"Skeleton"},{2,"Orc"}
+    };
+    public static Dictionary<string, byte> EnemyId = new Dictionary<string, byte>()
+    {
+        {"Goblin",0 },{"Skeleton",1},{"Orc",2}
+    };
 }

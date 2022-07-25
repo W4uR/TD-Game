@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63676ac18d3ff1748a7a4b3a7072f408, type: 3}
   m_Name: Skeleton
   m_EditorClassIdentifier: 
-  id: 0
+  id: 2
   health: 100
   name: Skeleton
   icon: {fileID: -840278917, guid: ec39fad17c8553e49b9578cef2d009b8, type: 3}

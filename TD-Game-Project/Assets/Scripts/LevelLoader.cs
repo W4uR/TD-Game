@@ -78,6 +78,7 @@ public class LevelLoader : MonoBehaviour
         //Load waves
         while (pointer<levelData.Length) //each cycle is one wave
         {
+            Debug.Log("Loading a wave...");
             Wave wave = new Wave();
             byte numberOfWaveObjects = levelData[pointer++];
             for (byte i = 0; i < numberOfWaveObjects; i++)
@@ -87,8 +88,11 @@ public class LevelLoader : MonoBehaviour
             }
             waves.Add(wave);
         }
-        
-
+        WaveEditor.Waves = waves;
+        foreach (var wave in waves)
+        {
+            Debug.Log($"{wave}");
+        }
         Debug.Log("Loaded level");
         OnLevelLoaded?.Invoke();
         return true;
@@ -97,7 +101,7 @@ public class LevelLoader : MonoBehaviour
     {     
         if (!Directory.Exists($"{Application.dataPath}/levels")) Directory.CreateDirectory($"{Application.dataPath}/levels");
         byte[] bytes = Extensions.Decompress(File.ReadAllBytes($"{Application.dataPath}/levels/{levelName}.td"));
-
+        Debug.Log("Level data is " + bytes.Length + " bytes long!");
         LoadLevel(bytes);   
     }
     protected void ClearMap()

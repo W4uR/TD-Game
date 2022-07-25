@@ -83,7 +83,7 @@ public class BrushSelector : MonoBehaviour
         }
         previewCells.Clear();
 
-
+        if (LE_InputManager.MouseOverUI) return;
 
         foreach (HexCoords direction in SelectedBrush.GetCells())
         {

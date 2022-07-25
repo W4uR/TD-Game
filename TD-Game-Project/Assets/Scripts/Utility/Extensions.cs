@@ -54,12 +54,21 @@ public static class Extensions
 
     public static T[] To1DArray<T>( this T[][] matrix)
     {
-        T[] array = new T[matrix.Length];
-        int w = matrix.GetLength(0);
-        int h = matrix.GetLength(1);
-        for (int i = 0; i < array.Length; i++)
+        int size = 0;
+        for (int i = 0; i < matrix.Length; i++)
         {
-            array[i] = matrix[i%w][i/w];
+            size += matrix[i].Length;
+        }
+        T[] array = new T[size];
+
+        int pointer = 0;
+        for (int i = 0; i < matrix.Length; i++)
+        {
+            for (int j = 0; j < matrix[i].Length; j++)
+            {
+                array[pointer++] = matrix[i][j];
+
+            }
         }
         return array;
     }

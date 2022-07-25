@@ -14,28 +14,31 @@ public class WaveButton : MonoBehaviour
 
     void Start()
     {
-        deleteButton.onClick.AddListener(delegate { WaveEditor.Singleton.DeleteWave(transform.GetSiblingIndex(), gameObject); });
-    }
-    private void OnEnable()
-    {
-        WaveEditor.WaveListUpdated += HandleWaveListUpdated;
-    }
-    private void OnDestroy()
-    {
-        WaveEditor.WaveListUpdated -= HandleWaveListUpdated;
+        deleteButton.onClick.AddListener(delegate { WaveEditor.Singleton.DeleteWave(transform.GetSiblingIndex()); });
+        waveLabel.fontStyle = FontStyles.Normal;
     }
 
-    private void HandleWaveListUpdated()
+    public void SetAsSelected(bool isSelected)
     {
+        if (isSelected)
+        {
+            waveLabel.fontStyle = FontStyles.Underline;
+            return;
+        }
+        waveLabel.fontStyle = FontStyles.Normal;
 
+    }
+
+    public void UpdateObject()
+    {
         deleteButton.gameObject.SetActive(WaveEditor.Waves.Count > 1);
-        waveLabel.text = (transform.GetSiblingIndex()+1).ToString();
+        waveLabel.text = (transform.GetSiblingIndex()+1).ToString();      
     }
 
+    //Referenced on the object
     public void OnButtonClicked()
     {
-        WaveEditor.SelectedWave = (byte)transform.GetSiblingIndex();
-        Debug.Log(WaveEditor.SelectedWave);
+        WaveEditor.Singleton.SelectedWave = (byte)transform.GetSiblingIndex();
     }
 
 

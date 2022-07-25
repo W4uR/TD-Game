@@ -23,7 +23,6 @@ public class LevelEditor : LevelLoader
         base.Awake();
 
         if (Instance == null) Instance = this;
-
         Cam = Camera.main;
     }
     private void OnEnable()
@@ -36,6 +35,7 @@ public class LevelEditor : LevelLoader
     }
     public void SaveLevel(string levelName)
     {
+
 
         byte[] bytes = new byte[4+(Tile.Size * tiles.Count)+(WaveEditor.Waves.Sum(x=>x.Size)+ WaveEditor.Waves.Count)];
 
@@ -80,7 +80,43 @@ public class LevelEditor : LevelLoader
     }   
     private void Update()
     {
-        brushSelector.ShowPreview(HexCoords.CartesianToHex(Cam.ScreenToWorldPoint(Input.mousePosition)));
+        if (!isCursor)
+        {
+            brushSelector.ShowPreview(HexCoords.CartesianToHex(Cam.ScreenToWorldPoint(Input.mousePosition)));
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            // Casts the ray and get the first game object hit
+            Physics.Raycast(ray, out hit);
+            if (hit.collider.TryGetComponent<Tile>(out Tile tile))
+            {
+                if (tile.Type == TileType.EnemySpawner)
+                {
+
+                    //Clicked on enemyspawner --- Open spawner editor, set selected spawner
+                    byte index = 0;
+                    var spawners = tiles.Values.Where(x => x.Type == TileType.EnemySpawner).ToArray();
+                    while (index < spawners.Count())
+                    {
+                        if (spawners[index].Coords == HexCoords.CartesianToHex(hit.point))
+                        {
+                            //Found the one
+                            break;
+                        }
+                        index++;
+                    }
+                    WaveEditor.SelectedSpawner = index;
+                    WaveEditor.Singleton.OpenWindow();
+                    Debug.Log("SELECTED SPAWNER IS: " + index);
+                    Debug.Log("OPEN SPAWNER EDITOR");
+
+                }
+            }
+        }
     }
     public void HandleLeftMouseButton()
     {
