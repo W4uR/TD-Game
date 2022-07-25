@@ -88,10 +88,13 @@ public class LevelLoader : MonoBehaviour
             }
             waves.Add(wave);
         }
-        WaveEditor.Waves = waves;
-        foreach (var wave in waves)
+        if (SceneManager.GetActiveScene().name == "Editor")
         {
-            Debug.Log($"{wave}");
+            WaveEditor.Waves = waves;
+            foreach (var wave in waves)
+            {
+                Debug.Log($"{wave}");
+            }
         }
         Debug.Log("Loaded level");
         OnLevelLoaded?.Invoke();
